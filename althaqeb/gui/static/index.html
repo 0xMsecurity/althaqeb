@@ -402,9 +402,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13
         <div class="card">
           <div class="card-title">About الثاقب</div>
           <div style="color:var(--dim2);font-size:12px;line-height:1.8">
-            <p><strong style="color:var(--accent)">الثاقب (Althaqeb)</strong> — "The Piercing Star"</p>
-            <p>From Surah Al-Tariq (86:1-3): النجم الثاقب</p>
-            <p style="margin-top:8px">AI Security Lifecycle Framework for the GCC and Arab world.</p>
+            <p><strong style="color:var(--accent)">الثاقب (Althaqeb)</strong> — AI Security Lifecycle Framework</p>
+            <p style="margin-top:8px">Built for the GCC and Arab world.</p>
             <p>Covers: IDENTITY · TRUST · ATTACK · DEFEND · INTELLIGENCE</p>
             <p style="margin-top:8px">Version: 0.1.0 · License: MIT</p>
             <p>Built in Bahrain 🇧🇭 by <a href="https://github.com/0xMsecurity" target="_blank" style="color:var(--accent)">0xMsecurity</a></p>
@@ -563,7 +562,7 @@ function startLiveScan(sessionId, targetUrl, module) {
     <span class="console-line info">الثاقب — Scan Engine v0.1.0</span>
     <span class="console-line ok">▶ Target: ${targetUrl}</span>
     <span class="console-line ok">▶ Module: ${module}</span>
-    <span class="console-line info">▶ Connecting to scan WebSocket...</span>
+    <span class="console-line warn">▶ Discovering AI endpoint on target...</span>
   `;
 
   try {
@@ -575,20 +574,34 @@ function startLiveScan(sessionId, targetUrl, module) {
       const msg = JSON.parse(evt.data);
       if (msg.type === 'finding') {
         const f = msg.data;
-        log(consoleEl, `[HIT] ${f.technique} — ${f.severity} — ${f.aivss_score}`, 'hit');
-        document.getElementById('live-findings-count').textContent =
-          parseInt(document.getElementById('live-findings-count').textContent||'0')+1;
+        const sev = f.severity || 'INFO';
+        const cls = sev === 'CRITICAL' || sev === 'HIGH' ? 'hit' : sev === 'INFO' ? 'info' : 'warn';
+        log(consoleEl, `[${sev}] ${f.technique} — score: ${f.aivss_score}`, cls);
+        if (sev !== 'INFO') {
+          document.getElementById('live-findings-count').textContent =
+            parseInt(document.getElementById('live-findings-count').textContent||'0')+1;
+        }
         state.allFindings.push(f);
       } else if (msg.type === 'progress') {
         document.getElementById('live-elapsed').textContent = msg.data.elapsed+'s';
         progress = Math.min(90, progress+5);
         progressEl.style.width = progress+'%';
         document.getElementById('live-status').textContent = msg.data.status;
+        if (msg.data.discovery) {
+          const d = msg.data.discovery;
+          if (d.endpoint_found) {
+            log(consoleEl, `▶ Endpoint found: ${d.endpoint_found} (${d.endpoint_format})`, 'ok');
+          } else if (d.detected_widgets && d.detected_widgets.length) {
+            log(consoleEl, `▶ Widgets detected: ${d.detected_widgets.join(', ')} — no direct API`, 'warn');
+          }
+        }
       } else if (msg.type === 'complete') {
         progressEl.style.width = '100%';
+        const vulnFindings = state.allFindings.filter(f => f.severity !== 'INFO').length;
         document.getElementById('live-status').textContent = 'Completed';
         document.getElementById('live-status').className = 'badge completed';
-        log(consoleEl, `▶ Scan complete. ${state.allFindings.length} finding(s) found.`, 'ok');
+        const cls = vulnFindings > 0 ? 'hit' : 'ok';
+        log(consoleEl, `▶ Scan complete. ${vulnFindings} vulnerability finding(s), ${state.allFindings.length} total.`, cls);
       } else if (msg.type === 'error') {
         log(consoleEl, `[ERROR] ${msg.data.message}`, 'warn');
       }
@@ -603,20 +616,50 @@ function startLiveScan(sessionId, targetUrl, module) {
 
 function pollSession(sessionId, consoleEl, progressEl) {
   let tries = 0;
+  let lastCount = 0;
+  let discoveryShown = false;
   const iv = setInterval(async () => {
     const data = await api(`/api/v1/scans/${sessionId}`);
     if (!data) return;
     tries++;
-    const count = (data.findings||[]).length;
-    document.getElementById('live-findings-count').textContent = count;
+
+    // Show discovery info once
+    if (!discoveryShown && data.profile && data.profile.discovery) {
+      const d = data.profile.discovery;
+      discoveryShown = true;
+      if (d.endpoint_found) {
+        log(consoleEl, `▶ Endpoint found: ${d.endpoint_found} (format: ${d.endpoint_format}, confidence: ${Math.round(d.endpoint_confidence*100)}%)`, 'ok');
+      } else if (d.detected_widgets && d.detected_widgets.length) {
+        log(consoleEl, `▶ No direct API. Detected widgets: ${d.detected_widgets.join(', ')}`, 'warn');
+      } else {
+        log(consoleEl, '▶ No AI API endpoint found at this URL', 'warn');
+        if (d.notes && d.notes[0]) log(consoleEl, `  ${d.notes[0]}`, 'info');
+      }
+    }
+
+    // Show new findings as they arrive
+    const findings = data.findings || [];
+    if (findings.length > lastCount) {
+      for (const f of findings.slice(lastCount)) {
+        const sev = f.severity || 'INFO';
+        const cls = sev === 'CRITICAL' || sev === 'HIGH' ? 'hit' : sev === 'INFO' ? 'info' : 'warn';
+        log(consoleEl, `[${sev}] ${f.technique} — score: ${f.aivss_score}`, cls);
+      }
+      lastCount = findings.length;
+    }
+
+    const vulnCount = findings.filter(f => f.severity !== 'INFO').length;
+    document.getElementById('live-findings-count').textContent = vulnCount;
     progressEl.style.width = Math.min(90, tries*8)+'%';
+
     if (data.status === 'completed') {
       clearInterval(iv);
       progressEl.style.width='100%';
       document.getElementById('live-status').textContent='Completed';
       document.getElementById('live-status').className='badge completed';
-      log(consoleEl, `▶ Scan complete. ${count} finding(s).`, 'ok');
-      state.allFindings = data.findings || [];
+      const cls = vulnCount > 0 ? 'hit' : 'ok';
+      log(consoleEl, `▶ Scan complete. ${vulnCount} vulnerability finding(s), ${findings.length} total.`, cls);
+      state.allFindings = findings;
     }
   }, 1500);
 }

@@ -39,7 +39,7 @@ BANNER = """
 [bold cyan]     ██║   ██╔══██║██╔══██║██║▄▄ ██║██║   ██║██╔══╝  ██╔══██╗ [/bold cyan]
 [bold cyan]     ██║   ██║  ██║██║  ██║╚██████╔╝╚██████╔╝███████╗██████╔╝ [/bold cyan]
 [bold cyan]     ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚══▀▀═╝  ╚═════╝ ╚══════╝╚═════╝  [/bold cyan]
-[bold white]  الثاقب — The Piercing Star  |  AI Security Lifecycle Framework[/bold white]
+[bold white]  الثاقب — AI Security Lifecycle Framework[/bold white]
 [dim]  github.com/0xMsecurity/althaqeb                        v{version}[/dim]
 """
 
