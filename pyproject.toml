@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "althaqeb"
+version = "0.1.0"
+description = "الثاقب — AI Security Lifecycle Framework. The piercing eye of AI security."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [
+    { name = "0xMsecurity", email = "msecurity@msecurity.bh" }
+]
+keywords = ["ai-security", "llm", "red-team", "prompt-injection", "pentest", "gcc", "arabic"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Security",
+]
+dependencies = [
+    "typer[all]>=0.12.0",
+    "httpx>=0.27.0",
+    "rich>=13.0.0",
+    "pydantic>=2.0.0",
+    "jinja2>=3.1.0",
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.29.0",
+    "websockets>=12.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "httpx>=0.27.0",
+]
+
+[project.scripts]
+althaqeb = "althaqeb.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/0xMsecurity/althaqeb"
+Repository = "https://github.com/0xMsecurity/althaqeb"
+"Bug Tracker" = "https://github.com/0xMsecurity/althaqeb/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["althaqeb*"]
+
+[tool.setuptools.package-data]
+althaqeb = [
+    "payloads/**/*.json",
+    "reports/templates/*.html",
+    "gui/static/*",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

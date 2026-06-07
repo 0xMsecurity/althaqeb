@@ -1,0 +1,1 @@
+"""Althaqeb FastAPI backend."""
