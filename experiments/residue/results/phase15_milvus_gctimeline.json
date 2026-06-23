@@ -1,0 +1,45 @@
+{
+  "engine": "milvus standalone v2.5.10",
+  "delete_ratio": "~40%",
+  "gc_interval_s": 30,
+  "timeline": [
+    {
+      "t_s": 0,
+      "poison_present": 5,
+      "posctrl": true,
+      "bytes": 37571654
+    },
+    {
+      "t_s": 30,
+      "poison_present": 5,
+      "posctrl": true,
+      "bytes": 37571654
+    },
+    {
+      "t_s": 60,
+      "poison_present": 5,
+      "posctrl": true,
+      "bytes": 47258495
+    },
+    {
+      "t_s": 120,
+      "poison_present": 5,
+      "posctrl": true,
+      "bytes": 43555927
+    },
+    {
+      "t_s": 240,
+      "poison_present": 5,
+      "posctrl": true,
+      "bytes": 30393637
+    },
+    {
+      "t_s": 360,
+      "poison_present": 0,
+      "posctrl": false,
+      "bytes": 11409161
+    }
+  ],
+  "purged_at_s": 360,
+  "verdict": "purged at ~360s"
+}

@@ -1,0 +1,12 @@
+{
+  "engine": "milvus standalone v2.5.10 (real)",
+  "delete_ratio": "1200/3005 = 40% (> single-segment compaction threshold)",
+  "checkpoints": {
+    "BEFORE_delete": {"poison_present": 5, "minio_bytes": 18615649},
+    "AFTER_delete":  {"poison_present": 5, "minio_bytes": 28283806},
+    "AFTER_compact": {"poison_present": 5, "minio_bytes": 37571654, "compaction_state": "Completed"},
+    "AFTER_gc_wait": {"poison_present": 5, "minio_bytes": 47258496, "gc_interval_s": 30, "wait_s": 80}
+  },
+  "verdict": "REFUTES 'high-ratio purges' hypothesis: compaction COMPLETED but deleted vectors STILL recoverable after 80s GC wait; store grows monotonically -> old segments not GC'd in window. Milvus durable in tested window even at high ratio.",
+  "caveat": "cannot claim Milvus never GCs; only that aggressive-config GC did not collect old segments within 80s of completed compaction."
+}

@@ -1,0 +1,50 @@
+{
+  "engine": "weaviate 1.28.2",
+  "cleanupIntervalSeconds": 5,
+  "timeline": [
+    {
+      "t_s": 0,
+      "poison_present": 5,
+      "posctrl": true,
+      "bytes": 918893
+    },
+    {
+      "t_s": 10,
+      "poison_present": 5,
+      "posctrl": true,
+      "bytes": 984429
+    },
+    {
+      "t_s": 20,
+      "poison_present": 5,
+      "posctrl": true,
+      "bytes": 984429
+    },
+    {
+      "t_s": 40,
+      "poison_present": 5,
+      "posctrl": true,
+      "bytes": 984429
+    },
+    {
+      "t_s": 70,
+      "poison_present": 0,
+      "posctrl": true,
+      "bytes": 1058910
+    },
+    {
+      "t_s": 110,
+      "poison_present": 0,
+      "posctrl": true,
+      "bytes": 1058910
+    },
+    {
+      "t_s": 160,
+      "poison_present": 0,
+      "posctrl": true,
+      "bytes": 1058910
+    }
+  ],
+  "purged_at_s": 70,
+  "verdict": "purged at ~70s"
+}

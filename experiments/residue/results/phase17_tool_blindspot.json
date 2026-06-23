@@ -1,0 +1,11 @@
+{
+  "db": "low-post-delete-write",
+  "total_recovered": 5,
+  "n_delete_mark": 0,
+  "n_sqlite_orphan_only": 5,
+  "signal_used": [
+    "sqlite_orphan(no-marks state)"
+  ],
+  "secrets_bit_identical_matched": 5,
+  "verdict": "PASS \u2014 blind spot closed (sqlite-orphan recovered unmarked residue, 0 FP)"
+}

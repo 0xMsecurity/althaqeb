@@ -1,0 +1,130 @@
+{
+  "seed": 3,
+  "checkpoints": [
+    {
+      "stage": "after_delete_0writes",
+      "nvecs_parsed": 0,
+      "bit_identical": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "best_cosine": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_present": 0
+    },
+    {
+      "stage": "after_1000writes",
+      "nvecs_parsed": 1010,
+      "bit_identical": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "best_cosine": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "n_present": 5
+    },
+    {
+      "stage": "after_5000writes",
+      "nvecs_parsed": 5010,
+      "bit_identical": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "best_cosine": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "n_present": 5
+    },
+    {
+      "stage": "after_20000writes",
+      "nvecs_parsed": 20010,
+      "bit_identical": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "best_cosine": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "n_present": 5
+    },
+    {
+      "stage": "after_50000writes",
+      "nvecs_parsed": 50010,
+      "bit_identical": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "best_cosine": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "n_present": 5
+    },
+    {
+      "stage": "after_3_restart_cycles",
+      "nvecs_parsed": 50010,
+      "bit_identical": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "best_cosine": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "n_present": 5
+    }
+  ],
+  "delete_collection": {
+    "segments_before": 1,
+    "segments_after": 1,
+    "residue_after_drop": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ]
+  }
+}

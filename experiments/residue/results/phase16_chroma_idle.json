@@ -1,0 +1,51 @@
+{
+  "engine": "chromadb 1.5.9",
+  "test": "idle background-compaction over 360s, client open",
+  "baseline_present": 5,
+  "timeline": [
+    {
+      "t_s": 0,
+      "poison_present": 5,
+      "total": 2005,
+      "delete_marked": 0,
+      "seg_bytes": 537340
+    },
+    {
+      "t_s": 30,
+      "poison_present": 5,
+      "total": 2005,
+      "delete_marked": 0,
+      "seg_bytes": 537340
+    },
+    {
+      "t_s": 60,
+      "poison_present": 5,
+      "total": 2005,
+      "delete_marked": 0,
+      "seg_bytes": 537340
+    },
+    {
+      "t_s": 120,
+      "poison_present": 5,
+      "total": 2005,
+      "delete_marked": 0,
+      "seg_bytes": 537340
+    },
+    {
+      "t_s": 240,
+      "poison_present": 5,
+      "total": 2005,
+      "delete_marked": 0,
+      "seg_bytes": 537340
+    },
+    {
+      "t_s": 360,
+      "poison_present": 5,
+      "total": 2005,
+      "delete_marked": 0,
+      "seg_bytes": 537340
+    }
+  ],
+  "purged_at_s": null,
+  "verdict": "NOT purged after 360s idle \u2014 Chroma uniquely never-purges holds"
+}

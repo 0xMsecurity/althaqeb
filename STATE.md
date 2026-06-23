@@ -1,0 +1,146 @@
+# ALTHAQEB — STATE OF RECORD
+
+> Self-contained continuity snapshot. If every other context (chat history, external
+> memory, the people) disappeared, this file plus the artifacts it points to must be
+> enough for a stranger to understand what was done, what is true, what is dead, and
+> how to resume. Read [`GRAVEYARD.md`](GRAVEYARD.md) before proposing any new direction.
+
+- **Last updated:** 2026-06-23
+- **Mission:** discover durable truth about whether *deletion is erasure* in agent /
+  vector-database memory, and turn surviving truth into durable forensic assets.
+- **Phase:** experiments **SATURATED**; in **implementation / hardening / packaging**.
+- **Status of the kernel:** ALIVE — survived every executed attack to date.
+
+---
+
+## 1. The one surviving kernel
+
+**Anti-forensic deletion residue in vector databases.**
+
+Question under test: *After an official `delete()` returns success, the logical layer
+reports clean, and plaintext/WAL residue is purged by compaction — does the embedding
+vector persist on disk, and can it be reconstructed back to the original text?*
+
+Answer, from executed experiments (CPU-only, single box, seeds fixed):
+
+- **YES, the vector persists** — bit-identical, in ChromaDB's HNSW segment
+  `data_level0.bin`, recoverable by a blind byte-parse with no schema/IDs.
+- **YES, it inverts to text** — vec2text (gtr-base) reconstructs trigger-bearing text
+  (cosine 0.89–0.97; specificity control passes: POISON token-overlap 4.0/5 vs
+  BENIGN/RANDOM 0.0).
+- **Deletion SELF-IDENTIFIES the residue** — the hnswlib `DELETE_MARK` bit selects
+  exactly the deleted vectors (5 of 3005), so erasure makes the content *easier* to
+  find, not harder. This is the novel step beyond Stahlberg SIGMOD'07 (plaintext
+  deleted-record persistence).
+
+### The sharp, defensible claim
+
+A **post-delete recovery window is universal** across all 6 real engines tested. Its
+**duration is unbounded ONLY on ChromaDB** — every other engine reclaims via a
+maintenance pass (vacuum / optimizer / compaction-GC / tombstone-cleanup) that is
+itself gated by thresholds or timers and often does not fire for realistic
+right-to-be-forgotten (small-ratio) deletions.
+
+| Engine | Residue right after delete | Reclamation trigger | Window |
+|---|---|---|---|
+| **ChromaDB** | yes (5/5, bit-identical, DELETE_MARK self-id) | **none observed** (4 attacks + 50k writes + drop + idle) | **unbounded** |
+| Milvus (standalone 2.5.10) | yes | GC after a *completed* high-ratio compaction | ~360s |
+| Weaviate (1.28.2) | yes | tombstone cleanup | ~cleanup interval (70s @ 5s; default 300s) |
+| Qdrant (server, Rust) | yes | vacuum optimizer | when optimizer fires |
+| pgvector (HNSW index) | yes | plain VACUUM | next (auto)vacuum |
+| pgvector / Postgres (heap) | yes | VACUUM FULL only | until VACUUM FULL |
+| FAISS / Qdrant-local (embedded) | **no** (reserialize/rewrite compacts) | — | clean (true negative) |
+
+Full evidence + per-claim traceability: [`experiments/residue/FINDINGS.md`](experiments/residue/FINDINGS.md).
+
+### Honest bounds (do not overclaim)
+
+- Residue appears in HNSW only **after** the vector flushes WAL→HNSW at least once;
+  delete-before-first-flush leaves no HNSW residue (lived in transient WAL plaintext).
+- ChromaDB "never reclaims" = **no reclaim observed** under all tested pressures; the
+  Rust compaction internals are not source-verified. Negative examples exist elsewhere
+  (Qdrant/pgvector demonstrably purge), so durability is genuinely engine-specific.
+- Inversion shown for gtr-base only (vec2text ships gtr + ada-002). Residue
+  *existence/recovery* is embedding-model-independent (shown on gtr-768 and MiniLM-384).
+- Quantization is a *partial* mitigation: trigger-preservation fp32 0.88 / fp16 0.88 /
+  int8 0.80 (dominant formats stay invertible); PQ-m96 0.40; 1-bit 0.24.
+
+---
+
+## 2. Durable assets created (the point of the work)
+
+Everything lives under [`experiments/residue/`](experiments/residue/).
+
+- **`tool/vdbresidue.py`** — the headline asset. Read-only, deterministic, no-LLM
+  DFIR / GDPR-erasure forensic auditor. Subcommands: `inspect`, `recover`, `report`,
+  `acquire`, `match`, `verify`. Blind recovery for Chroma (dual signal: DELETE_MARK
+  bit + sqlite seq-id orphan, 0 false positives) and Milvus (parquet delta tombstones);
+  `match` mode does exact-byte presence for known vectors on *any* engine. Chain-of-custody
+  JSONL on every op. Exit code 2 = recoverable residue found (CI / erasure gate).
+- **`tool/selftest.py`** — deterministic, ~5s, no downloads. Builds a tiny Chroma DB,
+  deletes 7, asserts exact recovery. **PASS** (7/7, 0 false positives) as of 2026-06-23.
+- **`scripts/vecdb_residue_audit.py`** — the original Chroma erasure auditor.
+- **`scripts/phase1..18` + `cross_version/`** — the executed experiment tree. Each claim
+  in FINDINGS.md traces to a script + a `results/*.json` + a `logs/*.log`.
+- **`FINDINGS.md`** — every surviving claim with evidence pointers and self-corrections.
+- **`FILE_LAYOUTS.md`** — reverse-engineered on-disk formats (chroma header.bin offsets +
+  DELETE_MARK byte; milvus parquet+delta; pgvector TOAST prefix; qdrant/weaviate notes).
+- **`MANIFEST.sha256` + `verify_manifest.sh`** — chain-of-custody over the residue tree.
+- **`run_all.sh`** — tiered reproduction (cpu / postgres / docker / all / verify).
+- **`REPRODUCE.md`, `requirements.lock.txt`, `results/ENV.txt`** — pinned, deterministic.
+- **`disclosure/`** — coordinated-disclosure DRAFTS (chroma, milvus, weaviate,
+  qdrant_pgvector_fyi). **NOT SENT — human approval gate.**
+
+---
+
+## 3. What is NOT done / blocked
+
+- **Disclosure not sent.** Ethical + human decision; drafts ready in `disclosure/`.
+- **Formal publication** deliberately deferred until evidence stabilizes (it has;
+  the gate is now "is the paper worth more than the tool?" — see open question below).
+- **Inversion on non-gtr models** untested (vec2text ships gtr + ada-002 only). Does
+  NOT affect residue existence/recovery claims, which are model-independent.
+- Earlier resource blocks (docker, PG18 dev headers) are RESOLVED — Qdrant-server,
+  Weaviate, real Milvus standalone, and pgvector HNSW index were all tested after unblock.
+
+---
+
+## 4. Reproduce from scratch
+
+```bash
+cd experiments/residue
+python3 -m venv .venv && .venv/bin/pip install -r requirements.lock.txt
+.venv/bin/python tool/selftest.py          # deterministic, no downloads -> SELFTEST PASS
+./verify_manifest.sh                        # chain-of-custody check
+./run_all.sh cpu                            # CPU-only phases
+./run_all.sh docker                         # engine phases needing docker
+```
+
+The `.venv/`, `hf_cache/`, `db/`, `build/` dirs are reproducible-from-scratch and are
+git-ignored on purpose. `results/` and `logs/` ARE evidence and are committed.
+
+---
+
+## 5. Open question for the next cycle (decide with the board, not with hope)
+
+The kernel survived saturation. The honest fork:
+
+1. **Tool-first authority** (preferred by current evidence): `vdbresidue` is a real,
+   reusable DFIR/GDPR asset. Harden it, broaden engine coverage in `match` mode, ship it
+   as the reference erasure-verification tool. Compounds. Survives without a paper.
+2. **Paper** ("deletion is not erasure in vector DBs; deletion self-identifies the
+   residue"): defensible and novel beyond SIGMOD'07, but must clear Reviewer #2 against
+   MemAudit/MemLineage/secure-deletion literature (see GRAVEYARD). Paper is a *side
+   effect*, never the goal.
+
+Default per doctrine: **strengthen the tool (asset that compounds) before writing the
+paper (output that decays).** Do not broaden scope into a "platform." Re-run the board
+review in `GRAVEYARD.md` §"How directions die here" before committing effort.
+
+---
+
+## 6. The standing rule
+
+Nature decides. Null hypothesis owns everything. No invented results, no narrative
+rescue, no resurrecting the graveyard without genuinely new evidence. Convergence over
+activity — an idle system with no remaining meaningful attack is healthy.

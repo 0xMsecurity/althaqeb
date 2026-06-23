@@ -1,0 +1,17 @@
+{
+  "engine": "chromadb",
+  "question": "is the deleted-vector residue + DELETE_MARK fixed/partial/architectural/version-specific?",
+  "classification": "ARCHITECTURAL — present and unchanged across all testable versions, incl. latest",
+  "tested_python": "3.13",
+  "results": {
+    "0.4.24": "not testable (pre-1.0 deps fail import on py3.13)",
+    "0.5.0":  "not testable (pre-1.0 deps fail import on py3.13)",
+    "0.5.23": "LEAKS (residue 5/5, delete_marked 5, logical clean)",
+    "0.6.3":  "LEAKS (residue 5/5, delete_marked 5)",
+    "1.0.21": "LEAKS (residue 5/5, delete_marked 5) [Rust-core rewrite era]",
+    "1.3.7":  "LEAKS (residue 5/5, delete_marked 5)",
+    "1.5.9":  "LEAKS (residue 5/5, delete_marked 5) [latest]"
+  },
+  "conclusion": "Not version-specific, not fixed (incl. latest 1.5.9), survived the 1.0 Rust-core rewrite. Inherent to the bundled hnswlib HNSW segment format (mark-deleted, no reclamation). Untested 0.4.x/0.5.0 use the same hnswlib segment, so almost certainly identical.",
+  "raw": "results/cross_version_chroma.jsonl"
+}

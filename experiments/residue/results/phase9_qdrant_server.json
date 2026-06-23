@@ -1,0 +1,10 @@
+{
+  "engine": "qdrant_server (qdrant/qdrant container, Rust engine)",
+  "method": "exact float32 byte-substring search (raw+normalized), positive-control on live filler",
+  "checkpoints": {
+    "BEFORE_delete":          {"poison_bytes_present": 5, "posctrl_filler": true},
+    "AFTER_delete":           {"poison_bytes_present": 5, "posctrl_filler": true},
+    "AFTER_vacuum_optimizer": {"poison_bytes_present": 0, "posctrl_filler": true}
+  },
+  "verdict": "post-delete recovery window exists (5/5); vacuum optimizer PURGES it (0/5). Bounded, unlike Chroma."
+}

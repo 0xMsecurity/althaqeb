@@ -1,0 +1,13 @@
+{
+  "engine": "milvus standalone v2.5.10 (etcd + MinIO + Milvus, real segment engine)",
+  "method": "exact float32 byte-search of MinIO object store (segment binlogs), live-filler positive control",
+  "delete_ratio": "5/3005 = 0.16%",
+  "checkpoints": {
+    "BEFORE_delete":  {"poison_present": 5, "posctrl": true},
+    "AFTER_delete":   {"poison_present": 5, "posctrl": true, "logical_query": "empty"},
+    "AFTER_compact":  {"poison_present": 5, "posctrl": true},
+    "AFTER_gc_wait":  {"poison_present": 5, "posctrl": true, "gc_interval_s": 30, "wait_s": 75}
+  },
+  "verdict": "DURABLE for realistic small-ratio deletes: compaction threshold not met at 0.16% -> no segment rewrite; GC does not touch live segment. Deleted vectors persist in MinIO binlog. Joins Chroma in durable bucket.",
+  "caveat": "high delete-ratio would trigger compaction and likely purge; get_compaction_state had a client bug but compaction would not merge at this ratio regardless."
+}

@@ -1,1 +1,0 @@
-"""Althaqeb test suite."""

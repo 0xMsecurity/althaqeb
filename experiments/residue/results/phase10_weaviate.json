@@ -1,0 +1,10 @@
+{
+  "engine": "weaviate 1.28.2 (Go, LSM-tree + HNSW commitlog)",
+  "method": "exact float32 byte-substring (raw+normalized), live-filler positive control",
+  "checkpoints": {
+    "BEFORE_delete":    {"poison_present": 5, "posctrl": true},
+    "AFTER_delete":     {"poison_present": 5, "posctrl": true, "logical_get": "404"},
+    "AFTER_churn_wait": {"poison_present": 5, "posctrl": true, "note": "300 inserts + 20s; async tombstone cleanup did not fire in window"}
+  },
+  "verdict": "recovery window present (5/5 after delete); persisted >= tested window; purge cycle not observed (cannot claim never-purges)"
+}

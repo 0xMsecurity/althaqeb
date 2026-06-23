@@ -1,0 +1,28 @@
+{
+  "chromadb": "1.5.9",
+  "subtests": {
+    "A_slot_reuse": {
+      "victims_present_of_1000": 1000,
+      "canary_present_of_5": 5,
+      "total_elems": 2005,
+      "delete_marked": 1000
+    },
+    "B_100pct_refill_x3": {
+      "gen0_present_of_1000": 1000,
+      "total_elems": 4000,
+      "delete_marked": 3000
+    },
+    "C_readd_same_ids": {
+      "old_v1_present_of_5": 5,
+      "new_v2_present_of_5": 5,
+      "total_elems": 2010,
+      "delete_marked": 5
+    },
+    "D_tinybatch_churn": {
+      "mark_present_of_5": 5,
+      "total_elems": 5505,
+      "delete_marked": 5
+    }
+  },
+  "verdict": "NO reclaim observed (residue survived all attacks)"
+}

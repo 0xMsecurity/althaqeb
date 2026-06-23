@@ -1,0 +1,64 @@
+{
+  "engines": [
+    {
+      "backend": "qdrant_local",
+      "store_bytes": 1692154,
+      "exact_byte_raw": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "exact_byte_norm": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "best_cosine": [
+        0.0699,
+        0.0687,
+        0.0533,
+        0.0817,
+        0.0588
+      ],
+      "n_present_cos>0.999": 0,
+      "logical_count_after_delete": 200
+    },
+    {
+      "backend": "faiss_flat_removeids",
+      "store_bytes": 616090,
+      "exact_byte_raw": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "exact_byte_norm": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "best_cosine": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_present_cos>0.999": 0,
+      "logical_ntotal_after_delete": 200
+    }
+  ],
+  "resource_blocked": [
+    "qdrant_server(docker perm denied)",
+    "milvus(docker)",
+    "weaviate(docker)",
+    "pgvector(no postgres server)"
+  ]
+}

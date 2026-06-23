@@ -1,0 +1,8 @@
+# reproducible-from-scratch, not evidence — keep out of the repo
+.venv/
+hf_cache/
+build/
+db/
+*.pyc
+__pycache__/
+# logs ARE evidence; keep them. results/ ARE evidence; keep them.

@@ -4,19 +4,18 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "althaqeb"
-version = "0.1.0"
-description = "الثاقب — AI Security Lifecycle Framework. The piercing eye of AI security."
+version = "0.2.0.dev0"
+description = "Agent memory residue forensics — does deletion equal erasure in LLM/vector-DB memory?"
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"
 authors = [
     { name = "0xMsecurity", email = "msecurity@msecurity.bh" }
 ]
-keywords = ["ai-security", "llm", "red-team", "prompt-injection", "pentest", "gcc", "arabic"]
+keywords = ["ai-security", "agent-memory", "vector-database", "forensics", "embedding-inversion", "vec2text", "hnsw"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Information Technology",
-    "Intended Audience :: System Administrators",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -24,27 +23,9 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Topic :: Security",
 ]
-dependencies = [
-    "typer[all]>=0.12.0",
-    "httpx>=0.27.0",
-    "rich>=13.0.0",
-    "pydantic>=2.0.0",
-    "jinja2>=3.1.0",
-    "fastapi>=0.110.0",
-    "uvicorn[standard]>=0.29.0",
-    "websockets>=12.0",
-    "python-dotenv>=1.0.0",
-]
-
-[project.optional-dependencies]
-dev = [
-    "pytest>=8.0.0",
-    "pytest-asyncio>=0.23.0",
-    "httpx>=0.27.0",
-]
-
-[project.scripts]
-althaqeb = "althaqeb.cli:app"
+# Runtime deps for the experiments are pinned in requirements.txt
+# (torch needs the CPU index; transformers must stay < 4.50 for vec2text).
+dependencies = []
 
 [project.urls]
 Homepage = "https://github.com/0xMsecurity/althaqeb"
@@ -53,15 +34,4 @@ Repository = "https://github.com/0xMsecurity/althaqeb"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["althaqeb*"]
-
-[tool.setuptools.package-data]
-althaqeb = [
-    "payloads/**/*.json",
-    "reports/templates/*.html",
-    "gui/static/*",
-]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-asyncio_mode = "auto"
+include = ["lethe*"]

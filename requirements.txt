@@ -1,0 +1,14 @@
+# Agent memory residue forensics — pinned to what was actually run.
+# torch is the CPU build; install it first from the CPU index, then the rest:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+#   pip install -r requirements.txt
+#
+# transformers MUST stay < 4.50 — 4.50+ adds a meta-device guard that breaks
+# vec2text's nested from_pretrained (RuntimeError on load_pretrained_corrector).
+
+chromadb==1.5.9
+torch==2.12.1
+transformers==4.46.3
+sentence-transformers==5.6.0
+vec2text
+numpy

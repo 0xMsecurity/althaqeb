@@ -1,0 +1,27 @@
+{
+  "segment": "/home/msec/opt/althaqeb/experiments/residue/db/chroma_gtr_seed0/f81f5485-5456-4f27-b05e-08caded741da/data_level0.bin",
+  "total_elements": 3005,
+  "delete_marked": 5,
+  "deleted_indices": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "cosine_to_best_poison": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "matched_poison": [
+    2,
+    3,
+    4,
+    1,
+    0
+  ],
+  "all_poison_covered": true
+}

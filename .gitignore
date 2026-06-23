@@ -1,3 +1,14 @@
+# experiment artifacts (scratch DBs, ANN segments, model caches)
+results/runs/
+chroma_*/
+*.sqlite3
+**/data_level0.bin
+**/link_lists.bin
+**/header.bin
+**/length.bin
+.hf_cache/
+residue_venv/
+
 __pycache__/
 *.py[cod]
 *$py.class
@@ -50,3 +61,8 @@ node_modules/
 .vscode/
 *.swp
 *.swo
+
+# ruflo plugin telemetry
+.claude-flow/
+.swarm/
+.hive-mind/

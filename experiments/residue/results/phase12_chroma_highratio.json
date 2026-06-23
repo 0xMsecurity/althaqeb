@@ -1,0 +1,1 @@
+{"engine": "chroma", "delete_ratio": "600/1005=60%", "total_elems": 2505, "delete_marked": 600, "poison_present": [true, true, true, true, true], "verdict": "durable regardless of ratio (hnswlib has no reclaiming compaction)"}
