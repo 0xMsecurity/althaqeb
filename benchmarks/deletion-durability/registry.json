@@ -1,0 +1,190 @@
+{
+  "$schema": "./schema.json",
+  "name": "Vector Database Deletion-Durability Registry",
+  "version": "0.1.0",
+  "description": "For each storage engine: after an official delete() returns success and the logical layer reports clean, does the embedding vector persist bit-identically on disk, what (if anything) reclaims it, and how long is the recovery window? Every quantitative claim traces to a committed result file under experiments/residue/results/. Build with build_matrix.py (fails if any cited evidence is missing).",
+  "method_summary": "Exact float32 byte-substring search (raw + L2-normalized) of the on-disk store, with a live-filler positive control to prove the search would find a present vector. cosine>0.999 / bit-identical = present. Recovery window = interval between delete() and the first reclamation pass that purges the residue.",
+  "window_class_values": {
+    "unbounded": "no reclamation observed under any tested pressure (writes, restarts, drop, idle)",
+    "auto-timed": "an automatic background pass purges it; a purge time was measured",
+    "auto-untimed": "an automatic pass (optimizer/autovacuum) purges it, but no purge time was measured here",
+    "manual-only": "only an explicit operator command purges it",
+    "none": "no residue — engine reclaims at write/close (true negative)"
+  },
+  "engines": [
+    {
+      "engine": "ChromaDB",
+      "version": "1.5.9 (architectural across 0.5.23 → 1.5.9)",
+      "category": "embedded vector DB (bundled hnswlib HNSW segment)",
+      "residue_after_delete": true,
+      "recovery_method": "DELETE_MARK blind byte-parse of data_level0.bin (no schema/IDs)",
+      "self_identifying_deletion": true,
+      "reclamation_trigger": "none observed",
+      "window_class": "unbounded",
+      "window_seconds": null,
+      "window_note": "survived 50k writes, restarts, delete_collection (drop), 360s idle, and 4 reclaim attacks",
+      "measured": [
+        "phase6: DELETE_MARK selects exactly the deleted elements [0,1,2,3,4] of 3005, cosine 1.0, all poison covered",
+        "phase16: idle 360s with client open → not purged (purged_at_s = null)",
+        "phase12: 60% delete ratio (600/1005) → 5/5 poison still present, 600 delete-marked",
+        "phase13: 4 reclaim attacks (slot reuse, 100% refill x3, re-add, churn) → no reclaim, residue 100% present",
+        "phase2_seed0: residue survives delete_collection (residue_after_drop 5/5)",
+        "cross_version: ARCHITECTURAL — residue + DELETE_MARK unchanged 0.5.23 → 1.5.9 incl. post-1.0 Rust rewrite"
+      ],
+      "evidence": [
+        "experiments/residue/results/phase6_blind_deletemark.json",
+        "experiments/residue/results/phase16_chroma_idle.json",
+        "experiments/residue/results/phase12_chroma_highratio.json",
+        "experiments/residue/results/phase13_chroma_reclaim_attack.json",
+        "experiments/residue/results/phase2_seed0.json",
+        "experiments/residue/results/cross_version_chroma_summary.json"
+      ],
+      "confidence": "high",
+      "notes": "Unique never-purges engine among all tested. Rust compaction internals not source-verified → 'no reclaim observed', not 'never'."
+    },
+    {
+      "engine": "Milvus (standalone)",
+      "version": "2.5.10 (etcd + MinIO + Milvus)",
+      "category": "distributed vector DB (parquet segment binlogs + delta tombstones)",
+      "residue_after_delete": true,
+      "recovery_method": "structured: id in delta (tombstone) parquet but row still present in segment binlog",
+      "self_identifying_deletion": true,
+      "reclamation_trigger": "GC after a completed high-ratio compaction",
+      "window_class": "auto-timed",
+      "window_seconds": 360,
+      "window_note": "DURABLE at realistic small delete ratios (compaction threshold not met); ~360s purge only after a high-ratio (40%) compaction completes",
+      "measured": [
+        "phase11: 0.16% delete ratio → 5/5 persist through delete+flush+compact+GC (threshold not met, no segment rewrite)",
+        "phase12: 40% delete → compaction COMPLETED but 5/5 still recoverable after 80s GC wait (refutes 'high-ratio always purges')",
+        "phase15: 40% delete, gc_interval 30s → purged_at_s = 360"
+      ],
+      "evidence": [
+        "experiments/residue/results/phase11_milvus_standalone.json",
+        "experiments/residue/results/phase12_milvus_highratio.json",
+        "experiments/residue/results/phase15_milvus_gctimeline.json"
+      ],
+      "confidence": "high",
+      "notes": "Small-ratio right-to-be-forgotten deletes do not trigger compaction → long persistence in practice."
+    },
+    {
+      "engine": "Weaviate",
+      "version": "1.28.2",
+      "category": "vector DB (Go, LSM-tree + HNSW commitlog)",
+      "residue_after_delete": true,
+      "recovery_method": "exact float32 byte-substring of segment/commitlog files",
+      "self_identifying_deletion": false,
+      "reclamation_trigger": "async tombstone cleanup",
+      "window_class": "auto-timed",
+      "window_seconds": 70,
+      "window_note": "purged at ~70s with cleanupIntervalSeconds=5; production default interval is 300s",
+      "measured": [
+        "phase10: 5/5 present after delete; persisted ≥ tested churn window",
+        "phase14: cleanupIntervalSeconds=5 → purged_at_s = 70"
+      ],
+      "evidence": [
+        "experiments/residue/results/phase10_weaviate.json",
+        "experiments/residue/results/phase14_weaviate_cleanup.json"
+      ],
+      "confidence": "high",
+      "notes": "SELF-CORRECTION: earlier called durable on a too-short 20s window; phase14 shows it auto-purges. Belongs with the bounded engines, not Chroma."
+    },
+    {
+      "engine": "Qdrant (server)",
+      "version": "qdrant/qdrant container (Rust engine)",
+      "category": "vector DB (Rust, mmap segments)",
+      "residue_after_delete": true,
+      "recovery_method": "exact float32 byte-substring of segment files",
+      "self_identifying_deletion": false,
+      "reclamation_trigger": "vacuum optimizer",
+      "window_class": "auto-untimed",
+      "window_seconds": null,
+      "window_note": "present 5/5 after delete; vacuum optimizer purges to 0/5 when it fires",
+      "measured": [
+        "phase9: BEFORE 5/5, AFTER_delete 5/5 (posctrl ok), AFTER_vacuum_optimizer 0/5 — bounded, unlike Chroma"
+      ],
+      "evidence": [
+        "experiments/residue/results/phase9_qdrant_server.json"
+      ],
+      "confidence": "high",
+      "notes": "Embedded Qdrant-local is a separate negative-control row (reclaims at close)."
+    },
+    {
+      "engine": "Postgres heap (pgvector as bytea/TOAST)",
+      "version": "userspace PostgreSQL",
+      "category": "RDBMS heap (vectors stored as bytea TOAST, not an index)",
+      "residue_after_delete": true,
+      "recovery_method": "dead-tuple / TOAST byte scan",
+      "self_identifying_deletion": true,
+      "reclamation_trigger": "VACUUM FULL (survives plain VACUUM)",
+      "window_class": "manual-only",
+      "window_seconds": null,
+      "window_note": "survives delete and plain (auto)VACUUM; only VACUUM FULL purges",
+      "measured": [
+        "phase4: residue present after delete (before_delete=true); survives-VACUUM / purged-by-VACUUM-FULL detail recorded in logs/pg.log stdout"
+      ],
+      "evidence": [
+        "experiments/residue/results/phase4_postgres.json"
+      ],
+      "confidence": "low",
+      "notes": "EVIDENCE GAP: phase4_postgres.json only records before_delete=true; the VACUUM-vs-VACUUM-FULL conclusion lives in logs/pg.log stdout, not the committed JSON. Re-run phase4 emitting structured checkpoints to upgrade confidence."
+    },
+    {
+      "engine": "pgvector HNSW index",
+      "version": "PG18 + pgvector 0.8.3",
+      "category": "RDBMS vector index (HNSW)",
+      "residue_after_delete": true,
+      "recovery_method": "index page byte scan",
+      "self_identifying_deletion": false,
+      "reclamation_trigger": "plain VACUUM",
+      "window_class": "auto-untimed",
+      "window_seconds": null,
+      "window_note": "present after delete (cos 1.0); plain VACUUM purges (cos → 0.13). Least leaky of the DBs.",
+      "measured": [
+        "STATE.md claim: present after delete, purged by plain autovacuum — NOT backed by a committed result file"
+      ],
+      "evidence": [],
+      "confidence": "unverified",
+      "notes": "EVIDENCE GAP: no committed structured result; only logs/pg18.log. Re-run phase8 and commit results/phase8_pgvector_hnsw.json to make this row build-verifiable."
+    },
+    {
+      "engine": "FAISS (flat, remove_ids)",
+      "version": "faiss-cpu",
+      "category": "ANN library (in-process index)",
+      "residue_after_delete": false,
+      "recovery_method": "n/a",
+      "self_identifying_deletion": false,
+      "reclamation_trigger": "reserialize-on-write compacts",
+      "window_class": "none",
+      "window_seconds": null,
+      "window_note": "true negative: no byte/cosine residue after remove_ids + persist",
+      "measured": [
+        "phase3: exact_byte raw/norm all false, best_cosine 0.0, 0/5 present after delete"
+      ],
+      "evidence": [
+        "experiments/residue/results/phase3_cross_backend.json"
+      ],
+      "confidence": "high",
+      "notes": "Negative control — proves the method does not false-positive on a clean store."
+    },
+    {
+      "engine": "Qdrant (local/embedded)",
+      "version": "qdrant-client local mode",
+      "category": "embedded ANN (rewrite-on-close)",
+      "residue_after_delete": false,
+      "recovery_method": "n/a",
+      "self_identifying_deletion": false,
+      "reclamation_trigger": "embedded rewrite-on-close compacts",
+      "window_class": "none",
+      "window_seconds": null,
+      "window_note": "true negative: best_cosine ~0.05-0.08, 0/5 present after delete",
+      "measured": [
+        "phase3: exact_byte all false, best_cosine [0.07,0.069,0.053,0.082,0.059], 0/5 present"
+      ],
+      "evidence": [
+        "experiments/residue/results/phase3_cross_backend.json"
+      ],
+      "confidence": "high",
+      "notes": "Negative control. NOT the Rust Qdrant server (separate row, which DOES leak a window)."
+    }
+  ]
+}

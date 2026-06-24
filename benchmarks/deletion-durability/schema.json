@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Vector Database Deletion-Durability Registry",
+  "type": "object",
+  "required": ["name", "version", "description", "method_summary", "window_class_values", "engines"],
+  "properties": {
+    "name": {"type": "string"},
+    "version": {"type": "string"},
+    "description": {"type": "string"},
+    "method_summary": {"type": "string"},
+    "window_class_values": {"type": "object"},
+    "engines": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "engine", "version", "category", "residue_after_delete", "recovery_method",
+          "self_identifying_deletion", "reclamation_trigger", "window_class",
+          "measured", "evidence", "confidence"
+        ],
+        "properties": {
+          "engine": {"type": "string"},
+          "version": {"type": "string"},
+          "category": {"type": "string"},
+          "residue_after_delete": {"type": "boolean"},
+          "recovery_method": {"type": "string"},
+          "self_identifying_deletion": {"type": "boolean"},
+          "reclamation_trigger": {"type": "string"},
+          "window_class": {"enum": ["unbounded", "auto-timed", "auto-untimed", "manual-only", "none"]},
+          "window_seconds": {"type": ["number", "null"]},
+          "window_note": {"type": "string"},
+          "measured": {"type": "array", "items": {"type": "string"}},
+          "evidence": {"type": "array", "items": {"type": "string"},
+            "description": "repo-root-relative paths to committed result files; build_matrix.py fails if any are missing"},
+          "confidence": {"enum": ["high", "medium", "low", "unverified"]},
+          "notes": {"type": "string"}
+        }
+      }
+    }
+  }
+}

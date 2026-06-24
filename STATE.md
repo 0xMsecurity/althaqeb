@@ -3,7 +3,8 @@
 > Self-contained continuity snapshot. If every other context (chat history, external
 > memory, the people) disappeared, this file plus the artifacts it points to must be
 > enough for a stranger to understand what was done, what is true, what is dead, and
-> how to resume. Read [`GRAVEYARD.md`](GRAVEYARD.md) before proposing any new direction.
+> how to resume. Governance lives in [`CONSTITUTION.md`](CONSTITUTION.md) (how to decide);
+> read [`GRAVEYARD.md`](GRAVEYARD.md) before proposing any new direction.
 
 - **Last updated:** 2026-06-24
 - **Mission:** discover durable truth about whether *deletion is erasure* in agent /
@@ -122,6 +123,23 @@ The `.venv/`, `hf_cache/`, `db/`, `build/` dirs are reproducible-from-scratch an
 git-ignored on purpose. `results/` and `logs/` ARE evidence and are committed.
 
 ---
+
+## 4b. Layer-up: the Deletion-Durability Registry (Pillar #1 → benchmark layer)
+
+Per the constitution's ladder (Tools → Benchmarks → Taxonomies → Registries), the saturated
+per-engine evidence has been elevated from prose into a structured, evidence-traceable
+artifact at [`benchmarks/deletion-durability/`](benchmarks/deletion-durability/):
+
+- `registry.json` — one entry per engine; **every quantitative claim cites a committed
+  `experiments/residue/results/*.json`**.
+- `build_matrix.py` — validator + matrix generator; **fails the build if any cited evidence
+  file is missing**, or if a high/medium-confidence row has no evidence (structural NO FAKE
+  RESULTS gate; negative-tested). Renders `MATRIX.md`.
+- Surfaces 2 honest evidence gaps as `unverified`/`low` (Postgres heap, pgvector HNSW index)
+  — these are now tracked to-dos (re-run + commit structured results), not buried prose.
+
+This is the engine-independent framing (escapes the "Chroma project" trap) and the seed of
+the `benchmarks/ taxonomies/ registries/` platform layout.
 
 ## 5. Open question for the next cycle (decide with the board, not with hope)
 
