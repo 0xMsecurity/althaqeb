@@ -159,16 +159,26 @@ re-runs both gates on every push/PR and fails if generated artifacts go stale �
 NO-FAKE-RESULTS gate is now permanent, not manual. Governance: [`DOCTRINE.md`](DOCTRINE.md)
 (14 departments, Reality veto) operationalizes the board.
 
-## 4d. Replication status (Provisional → Confirmed)
+## 4d. Replication status (Provisional → Confirmed) + 9th engine
 
 Multi-seed replication executed for every readily-confirmable engine (SPEC §5 needs ≥3
-independent valid trials, positive control held). **5 of 8 Confirmed:**
+independent valid trials, positive control held). **9 engines, 6 Confirmed.**
+
+NEW (page-aware detector): `vdbresidue` gained a SQLite-page-aware match (overflow-page
+de-interruption) — raw byte-search under-counts SQLite-backed stores because vectors split
+across overflow pages (each prefixed with a 4-byte next-page pointer). With it, **sqlite-vec**
+(9th engine) measures **VEDC-N Confirmed** (phase24, 3 seeds): 5/5 recoverable before delete
+(raw saw 2/5), 0/5 after a committed delete — vec0 compacts its chunk; first production engine
+with no recoverable post-delete residue. SPEC §9 limitation is now ADDRESSED; selftest covers it.
+
+**Confirmed (6):**
 
 - **ChromaDB** (VEDC-U+S) — phase2 ×5 seeds + cross-version.
 - **Weaviate** (VEDC-AT) — phase19 ×3 seeds, purged 70s in every trial.
 - **pgvector index** (VEDC-AU) — phase8 seeds 0/1/2, VACUUM purges in all.
 - **Postgres heap** (VEDC-M+S) — phase4 seeds 0/1/2, survives plain VACUUM (4/5), VACUUM FULL purges.
 - **Qdrant-server** (VEDC-AU) — phase22 4 valid of 5 (seed 1 discarded: positive-control failure per SPEC §4).
+- **sqlite-vec** (VEDC-N) — phase24 ×3 seeds via the page-aware detector; no recoverable residue after delete.
 
 **Still Provisional (by deliberate cost/value call, not gap):**
 - **Milvus** (VEDC-AT+S) — DEFERRED. Already has the strongest Provisional evidence of any
