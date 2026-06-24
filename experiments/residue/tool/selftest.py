@@ -48,9 +48,35 @@ if seg is not None:
     sniff = [(k, secret[k].astype(np.float32).tobytes()) for k in range(NDEL)]
     ok_stream = V._stream_search(seg, sniff, chunk=37) == set(range(NDEL))
 shutil.rmtree(DB, ignore_errors=True)
+
+# ---- milvus backend regression: second engine, otherwise-untested recover path ----
+# Build a minimal segment(data)+tombstone(delta) parquet layout, delete a known id subset
+# via the delta log, and assert milvus_recover returns exactly those rows bit-identically.
+ok_milvus = True; milvus_status = "milvus=skip(no-pyarrow)"
+try:
+    import pyarrow as pa, pyarrow.parquet as pq
+    MDB = os.path.join(ROOT, "db", "_selftest_milvus")
+    if os.path.exists(MDB): shutil.rmtree(MDB)
+    mseg = os.path.join(MDB, "seg", "data"); os.makedirs(mseg)
+    mdelta = os.path.join(MDB, "seg", "delta"); os.makedirs(mdelta)
+    NROW = 20; mdel = [3, 7, 11, 15]
+    mvecs = np.random.default_rng(2024).standard_normal((NROW, DIM)).astype(np.float32)
+    pq.write_table(pa.table({"id": pa.array(list(range(NROW)), pa.int64()),
+                             "vec": pa.array([v.tolist() for v in mvecs], pa.list_(pa.float32()))}),
+                   os.path.join(mseg, "0.parquet"))
+    pq.write_table(pa.table({"id": pa.array(mdel, pa.int64())}), os.path.join(mdelta, "0.parquet"))
+    _mi, mv, ml = V.milvus_recover(MDB)
+    got = sorted(l["id"] for l in ml)
+    mfid = all(any(np.array_equal(mv[j], mvecs[k]) for j in range(len(mv))) for k in mdel)
+    ok_milvus = (V.detect_backend(MDB) == "milvus") and got == sorted(mdel) and mfid
+    shutil.rmtree(MDB, ignore_errors=True)
+    milvus_status = f"milvus={'ok' if ok_milvus else 'FAIL'}({len(ml)}/{len(mdel)})"
+except ImportError:
+    pass
+
 print(f"backend={backend} expected_deleted={NDEL} recovered={len(labels)} bit_identical_matched={matched} "
       f"match_present={sum(r['present'] for r in mres)}/{NDEL} match_false_positives={sum(r['present'] for r in mrnd)} "
-      f"stream_boundary={'ok' if ok_stream else 'FAIL'}")
-if ok_backend and ok_count and ok_fidelity and ok_match and ok_stream:
+      f"stream_boundary={'ok' if ok_stream else 'FAIL'} {milvus_status}")
+if ok_backend and ok_count and ok_fidelity and ok_match and ok_stream and ok_milvus:
     print("SELFTEST PASS"); sys.exit(0)
 print("SELFTEST FAIL"); sys.exit(1)
