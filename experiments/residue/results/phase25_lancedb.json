@@ -1,0 +1,107 @@
+{
+  "trials": [
+    {
+      "seed": 0,
+      "checkpoints": {
+        "BEFORE_delete": {
+          "poison_present": 5,
+          "posctrl": true,
+          "bytes": 1554897
+        },
+        "AFTER_delete_lowratio": {
+          "poison_present": 5,
+          "posctrl": true,
+          "bytes": 1556192,
+          "logical_rows": 500
+        },
+        "AFTER_optimize_lowratio": {
+          "poison_present": 5,
+          "posctrl": true,
+          "bytes": 1555501
+        },
+        "AFTER_optimize_highratio": {
+          "poison_present": 0,
+          "posctrl": true,
+          "bytes": 925185,
+          "logical_rows": 300
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "checkpoints": {
+        "BEFORE_delete": {
+          "poison_present": 5,
+          "posctrl": true,
+          "bytes": 1554897
+        },
+        "AFTER_delete_lowratio": {
+          "poison_present": 5,
+          "posctrl": true,
+          "bytes": 1556195,
+          "logical_rows": 500
+        },
+        "AFTER_optimize_lowratio": {
+          "poison_present": 5,
+          "posctrl": true,
+          "bytes": 1555504
+        },
+        "AFTER_optimize_highratio": {
+          "poison_present": 0,
+          "posctrl": true,
+          "bytes": 925185,
+          "logical_rows": 300
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "checkpoints": {
+        "BEFORE_delete": {
+          "poison_present": 5,
+          "posctrl": true,
+          "bytes": 1554897
+        },
+        "AFTER_delete_lowratio": {
+          "poison_present": 5,
+          "posctrl": true,
+          "bytes": 1556192,
+          "logical_rows": 500
+        },
+        "AFTER_optimize_lowratio": {
+          "poison_present": 5,
+          "posctrl": true,
+          "bytes": 1555501
+        },
+        "AFTER_optimize_highratio": {
+          "poison_present": 0,
+          "posctrl": true,
+          "bytes": 925187,
+          "logical_rows": 300
+        }
+      }
+    }
+  ],
+  "summary": {
+    "engine": "lancedb 0.33.0",
+    "n_valid": 3,
+    "self_identifying_deletion": true,
+    "poison_after_softdelete": [
+      5,
+      5,
+      5
+    ],
+    "poison_after_optimize_lowratio": [
+      5,
+      5,
+      5
+    ],
+    "poison_after_optimize_highratio": [
+      0,
+      0,
+      0
+    ],
+    "window_class_observed": "manual-only",
+    "verdict": "REPLICATED across 3 seeds: soft delete leaves residue (5/5); a routine optimize at LOW delete ratio does NOT purge it (5/5 \u2014 deletion not materialized, like Milvus small-ratio); only explicit compaction at HIGH delete ratio materializes + purges (0/5). -> VEDC-M+S (manual, deletion-materialization-threshold-gated; deletion self-identifies via Lance deletion files)."
+  }
+}

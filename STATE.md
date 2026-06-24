@@ -159,10 +159,15 @@ re-runs both gates on every push/PR and fails if generated artifacts go stale �
 NO-FAKE-RESULTS gate is now permanent, not manual. Governance: [`DOCTRINE.md`](DOCTRINE.md)
 (14 departments, Reality veto) operationalizes the board.
 
-## 4d. Replication status (Provisional → Confirmed) + 9th engine
+## 4d. Replication status (Provisional → Confirmed) + new engines
 
 Multi-seed replication executed for every readily-confirmable engine (SPEC §5 needs ≥3
-independent valid trials, positive control held). **9 engines, 6 Confirmed.**
+independent valid trials, positive control held). **10 engines, 7 Confirmed.**
+
+NEW (LanceDB, 10th engine, VEDC-M+S Confirmed, phase25 ×3 seeds): a real versioned-columnar
+vector DB. Soft-deletes via deletion files; residue persists after delete AND through a routine
+`optimize` at low (right-to-erasure) delete ratios — only high-ratio compaction materializes +
+purges. Same class as Postgres-heap (manual) but threshold-gated like Milvus small-ratio.
 
 NEW (page-aware detector): `vdbresidue` gained a SQLite-page-aware match (overflow-page
 de-interruption) — raw byte-search under-counts SQLite-backed stores because vectors split
@@ -179,6 +184,7 @@ with no recoverable post-delete residue. SPEC §9 limitation is now ADDRESSED; s
 - **Postgres heap** (VEDC-M+S) — phase4 seeds 0/1/2, survives plain VACUUM (4/5), VACUUM FULL purges.
 - **Qdrant-server** (VEDC-AU) — phase22 4 valid of 5 (seed 1 discarded: positive-control failure per SPEC §4).
 - **sqlite-vec** (VEDC-N) — phase24 ×3 seeds via the page-aware detector; no recoverable residue after delete.
+- **LanceDB** (VEDC-M+S) — phase25 ×3 seeds; soft-delete residue purged only by high-ratio compaction.
 
 **Still Provisional (by deliberate cost/value call, not gap):**
 - **Milvus** (VEDC-AT+S) — DEFERRED. Already has the strongest Provisional evidence of any

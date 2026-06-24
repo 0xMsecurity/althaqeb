@@ -19,6 +19,7 @@ Exact float32 byte-substring search (raw + L2-normalized) of the on-disk store, 
 | **Qdrant (server)** (qdrant/qdrant container (Rust engine)) | **YES** | — | vacuum optimizer | auto-untimed | — | high |
 | **pgvector HNSW index** (PG18 + pgvector 0.8.3) | **YES** | — | plain VACUUM | auto-untimed | — | high |
 | **Postgres heap (pgvector as bytea/TOAST)** (userspace PostgreSQL) | **YES** | yes | VACUUM FULL (survives plain VACUUM) | manual-only | — | high |
+| **LanceDB** (0.33.0 (Lance versioned columnar format)) | **YES** | yes | explicit compaction (optimize/compact_files) that MATERIALIZES deletions; gated by a per-fragment deletion-materialization threshold (~10%) | manual-only | — | high |
 | **Weaviate** (1.28.2) | **YES** | — | async tombstone cleanup | auto-timed | ~70s | high |
 | **Milvus (standalone)** (2.5.10 (etcd + MinIO + Milvus)) | **YES** | yes | GC after a completed high-ratio compaction | auto-timed | ~360s | high |
 | **FAISS (flat, remove_ids)** (faiss-cpu) | no (true negative) | — | reserialize-on-write compacts | none | — | high |
@@ -92,6 +93,16 @@ Exact float32 byte-substring search (raw + L2-normalized) of the on-disk store, 
   - `experiments/residue/results/phase4_postgres.json`
   - `experiments/residue/results/phase4_postgres_seed1.json`
   - `experiments/residue/results/phase4_postgres_seed2.json`
+
+### LanceDB (0.33.0 (Lance versioned columnar format))
+- category: vector DB (immutable versioned fragments + deletion files)
+- recovery method: raw float32 byte-scan of Lance fragment files (delete is a soft-delete mask; fragment data retained until materialized)
+- window: soft delete leaves residue; a routine optimize at low (right-to-erasure) delete ratios does NOT purge it (threshold not met, like Milvus small-ratio); only high-ratio compaction materializes + purges
+- note: Real production vector DB. Same class as Postgres-heap (VEDC-M+S) but a different mechanism: manual compaction with a deletion-materialization threshold, not VACUUM FULL. Privacy-relevant: small-ratio right-to-be-forgotten deletes persist even through a routine optimize — mirrors the Milvus small-ratio finding.
+- measured:
+  - phase25 (×3 seeds): BEFORE 5/5; AFTER soft delete (1% ratio) 5/5; AFTER optimize at low ratio 5/5 (NOT materialized); AFTER optimize at high ratio (~40%) 0/5; positive control (live id) held throughout
+- evidence (committed result files):
+  - `experiments/residue/results/phase25_lancedb.json`
 
 ### Weaviate (1.28.2)
 - category: vector DB (Go, LSM-tree + HNSW commitlog)

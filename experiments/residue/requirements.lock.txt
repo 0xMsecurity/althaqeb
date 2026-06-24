@@ -142,3 +142,4 @@ websockets==16.0
 xxhash==3.7.0
 yarl==1.24.2
 sqlite-vec==0.1.9
+lancedb==0.33.0

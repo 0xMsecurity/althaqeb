@@ -226,6 +226,27 @@
       "confidence": "high",
       "replication": "multi-seed (×3, phase24 seeds 0/1/2)",
       "notes": "REAL engine that erases on delete — NOT a synthetic negative control like FAISS. Required a SQLite-page-aware detector (overflow-page de-interruption, now in vdbresidue match mode; SPEC §9) because raw byte-search under-counts when SQLite splits a vector across overflow pages. First production engine measured with no recoverable post-delete residue (good privacy default)."
+    },
+    {
+      "engine": "LanceDB",
+      "version": "0.33.0 (Lance versioned columnar format)",
+      "category": "vector DB (immutable versioned fragments + deletion files)",
+      "residue_after_delete": true,
+      "recovery_method": "raw float32 byte-scan of Lance fragment files (delete is a soft-delete mask; fragment data retained until materialized)",
+      "self_identifying_deletion": true,
+      "reclamation_trigger": "explicit compaction (optimize/compact_files) that MATERIALIZES deletions; gated by a per-fragment deletion-materialization threshold (~10%)",
+      "window_class": "manual-only",
+      "window_seconds": null,
+      "window_note": "soft delete leaves residue; a routine optimize at low (right-to-erasure) delete ratios does NOT purge it (threshold not met, like Milvus small-ratio); only high-ratio compaction materializes + purges",
+      "measured": [
+        "phase25 (×3 seeds): BEFORE 5/5; AFTER soft delete (1% ratio) 5/5; AFTER optimize at low ratio 5/5 (NOT materialized); AFTER optimize at high ratio (~40%) 0/5; positive control (live id) held throughout"
+      ],
+      "evidence": [
+        "experiments/residue/results/phase25_lancedb.json"
+      ],
+      "confidence": "high",
+      "replication": "multi-seed (×3, phase25 seeds 0/1/2)",
+      "notes": "Real production vector DB. Same class as Postgres-heap (VEDC-M+S) but a different mechanism: manual compaction with a deletion-materialization threshold, not VACUUM FULL. Privacy-relevant: small-ratio right-to-be-forgotten deletes persist even through a routine optimize — mirrors the Milvus small-ratio finding."
     }
   ]
 }
