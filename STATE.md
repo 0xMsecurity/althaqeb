@@ -159,6 +159,27 @@ re-runs both gates on every push/PR and fails if generated artifacts go stale �
 NO-FAKE-RESULTS gate is now permanent, not manual. Governance: [`DOCTRINE.md`](DOCTRINE.md)
 (14 departments, Reality veto) operationalizes the board.
 
+## 4d. Replication status (Provisional → Confirmed)
+
+Multi-seed replication executed for every readily-confirmable engine (SPEC §5 needs ≥3
+independent valid trials, positive control held). **5 of 8 Confirmed:**
+
+- **ChromaDB** (VEDC-U+S) — phase2 ×5 seeds + cross-version.
+- **Weaviate** (VEDC-AT) — phase19 ×3 seeds, purged 70s in every trial.
+- **pgvector index** (VEDC-AU) — phase8 seeds 0/1/2, VACUUM purges in all.
+- **Postgres heap** (VEDC-M+S) — phase4 seeds 0/1/2, survives plain VACUUM (4/5), VACUUM FULL purges.
+- **Qdrant-server** (VEDC-AU) — phase22 4 valid of 5 (seed 1 discarded: positive-control failure per SPEC §4).
+
+**Still Provisional (by deliberate cost/value call, not gap):**
+- **Milvus** (VEDC-AT+S) — DEFERRED. Already has the strongest Provisional evidence of any
+  engine (3 conditions: phase11 small-ratio durable, phase12 high-ratio compaction-completed-
+  still-present, phase15 purge-at-360s). Multi-seed needs a ~16-min, 3-container
+  (etcd+MinIO+Milvus) run per the phase11/15 harness; marginal value (confirm 360s timing)
+  judged below cost. Resumable: clone phase19/phase22 structure over a per-seed Milvus cluster.
+- **FAISS, Qdrant-local** — negative controls; Confirmed status is not meaningful for a control
+  (their no-false-positive role is already demonstrated by every positive engine's positive
+  control). Left Provisional by design.
+
 ## 5. Open question for the next cycle (decide with the board, not with hope)
 
 The kernel survived saturation. The honest fork:
