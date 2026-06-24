@@ -25,6 +25,8 @@
 
 `+S` suffix = deletion is self-identifying (raises practical recoverability).
 
+> **VEDC-N is format-scoped (SPEC §9):** the float32 detector does not see quantized (int8/PQ/binary) residue. A VEDC-N row rules out residue only for the storage format tested.
+
 ## Reading
 
 - 6 of 8 engines expose a post-delete recovery window.

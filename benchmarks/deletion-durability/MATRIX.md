@@ -114,7 +114,7 @@ Exact float32 byte-substring search (raw + L2-normalized) of the on-disk store, 
 - category: ANN library (in-process index)
 - recovery method: n/a
 - window: true negative: no byte/cosine residue after remove_ids + persist
-- note: Negative control — proves the method does not false-positive on a clean store.
+- note: Negative control — proves the method does not false-positive on a clean store. VEDC-N is float32-scoped (SPEC §9): not tested against quantized storage.
 - measured:
   - phase3: exact_byte raw/norm all false, best_cosine 0.0, 0/5 present after delete
 - evidence (committed result files):
@@ -124,7 +124,7 @@ Exact float32 byte-substring search (raw + L2-normalized) of the on-disk store, 
 - category: embedded ANN (rewrite-on-close)
 - recovery method: n/a
 - window: true negative: best_cosine ~0.05-0.08, 0/5 present after delete
-- note: Negative control. NOT the Rust Qdrant server (separate row, which DOES leak a window).
+- note: Negative control. NOT the Rust Qdrant server (separate row, which DOES leak a window). VEDC-N is float32-scoped (SPEC §9): not tested against quantized storage.
 - measured:
   - phase3: exact_byte all false, best_cosine [0.07,0.069,0.053,0.082,0.059], 0/5 present
 - evidence (committed result files):

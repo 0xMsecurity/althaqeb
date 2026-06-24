@@ -121,7 +121,31 @@ erasure verification and DFIR. Engine-specific findings are handled under coordi
 disclosure (see [`experiments/residue/disclosure/`](../../experiments/residue/disclosure/));
 classifications are published only at honest, non-sensational severity.
 
-## 9. Versioning
+## 9. Limitations & detector scope (Adversary / Reviewer #2 self-attack)
+
+The normative detector (§4) searches for **float32** byte-exactness / cosine > 0.999. This has
+a known blind spot that callers MUST respect:
+
+- **Quantized storage evades the float32 detector.** An engine that stores vectors as scalar
+  int8, product-quantized (PQ), or binary codes holds the residue in a *different* byte layout.
+  The raw-float32 sliding window will not match it, so a naive run could report "no residue"
+  when recoverable residue is present. Evidence (`phase5_quantization.json`): a logically
+  deleted vector stored as **scalar int8 dequantizes to cosine 0.9996** of the original and
+  still inverts to trigger-bearing text (trigger-preservation 0.80); PQ-m96 0.86/0.40; 1-bit
+  0.80/0.24. So **"no float32 residue" ≠ "no recoverable residue."**
+- **Therefore `VEDC-N` is format-scoped.** A `VEDC-N` (None) classification is valid ONLY for
+  the storage format actually measured. Ruling out residue in a quantized store requires a
+  **quantization-aware detector** (dequantize-then-cosine with the engine's scale/codebook).
+  This is acknowledged future work, not yet part of the conformant method.
+- **Positive control must match format.** The live positive-control vector MUST be stored in
+  the same format as the deleted target, so a passing control proves the detector can see
+  *that* format — not merely float32.
+
+Other bounds: text invertibility is demonstrated for gtr-base embeddings only (vec2text ships
+gtr + ada-002); residue *existence* is embedding-model-independent. Backups, replication logs,
+and OS-level free-space are out of scope (§2).
+
+## 10. Versioning
 
 VEDC is versioned with the registry. Breaking changes to classes or method bump the minor
 version. Each published `CLASSIFICATION.md` records the registry version it was generated from.

@@ -173,7 +173,7 @@
       ],
       "confidence": "high",
       "replication": "single-run (n=1, phase3) — negative control",
-      "notes": "Negative control — proves the method does not false-positive on a clean store."
+      "notes": "Negative control — proves the method does not false-positive on a clean store. VEDC-N is float32-scoped (SPEC §9): not tested against quantized storage."
     },
     {
       "engine": "Qdrant (local/embedded)",
@@ -194,7 +194,7 @@
       ],
       "confidence": "high",
       "replication": "single-run (n=1, phase3) — negative control",
-      "notes": "Negative control. NOT the Rust Qdrant server (separate row, which DOES leak a window)."
+      "notes": "Negative control. NOT the Rust Qdrant server (separate row, which DOES leak a window). VEDC-N is float32-scoped (SPEC §9): not tested against quantized storage."
     }
   ]
 }

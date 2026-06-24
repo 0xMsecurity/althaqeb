@@ -72,6 +72,10 @@ def render(reg):
     for wc, (cid, name) in CLASS.items():
         L.append(f"- **{cid}** ({name}) — window_class `{wc}`")
     L += ["", "`+S` suffix = deletion is self-identifying (raises practical recoverability).", ""]
+    if any(e["window_class"] == "none" for e in engines):
+        L += ["> **VEDC-N is format-scoped (SPEC §9):** the float32 detector does not see "
+              "quantized (int8/PQ/binary) residue. A VEDC-N row rules out residue only for the "
+              "storage format tested.", ""]
     # headline, computed from data
     u = [e["engine"] for e in engines if e["window_class"] == "unbounded"]
     leak = [e for e in engines if e["residue_after_delete"]]
