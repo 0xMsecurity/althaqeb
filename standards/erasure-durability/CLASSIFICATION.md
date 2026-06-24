@@ -8,8 +8,8 @@
 |---|---|---|---|---|
 | **ChromaDB** | VEDC-U+S (Unbounded) | yes | Confirmed | `phase6_blind_deletemark.json`, `phase16_chroma_idle.json`, `phase12_chroma_highratio.json`, `phase13_chroma_reclaim_attack.json`, `phase2_seed0.json`, `cross_version_chroma_summary.json` |
 | **Qdrant (server)** | VEDC-AU (Auto / untimed) | — | Provisional | `phase9_qdrant_server.json` |
-| **pgvector HNSW index** | VEDC-AU (Auto / untimed) | — | Provisional | `phase8_pgvector_hnsw.json` |
-| **Postgres heap (pgvector as bytea/TOAST)** | VEDC-M+S (Manual-only) | yes | Provisional | `phase4_postgres.json` |
+| **pgvector HNSW index** | VEDC-AU (Auto / untimed) | — | Confirmed | `phase8_pgvector_hnsw.json`, `phase8_pgvector_hnsw_seed1.json`, `phase8_pgvector_hnsw_seed2.json` |
+| **Postgres heap (pgvector as bytea/TOAST)** | VEDC-M+S (Manual-only) | yes | Confirmed | `phase4_postgres.json`, `phase4_postgres_seed1.json`, `phase4_postgres_seed2.json` |
 | **Milvus (standalone)** | VEDC-AT+S (Auto / timed) | yes | Provisional | `phase11_milvus_standalone.json`, `phase12_milvus_highratio.json`, `phase15_milvus_gctimeline.json` |
 | **Weaviate** | VEDC-AT (Auto / timed) | — | Confirmed | `phase10_weaviate.json`, `phase14_weaviate_cleanup.json`, `phase19_weaviate_multiseed.json` |
 | **FAISS (flat, remove_ids)** | VEDC-N (None) | — | Provisional | `phase3_cross_backend.json` |
@@ -31,5 +31,5 @@
 
 - 6 of 8 engines expose a post-delete recovery window.
 - **VEDC-U (unbounded): ChromaDB** — the only class with no observed reclamation.
-- Confirmed (multi-seed/cross-version/multi-condition) leak classifications: ChromaDB, Weaviate. All others are Provisional (single trajectory) per SPEC §5 — replication is the next experiment.
+- Confirmed (multi-seed/cross-version/multi-condition) leak classifications: ChromaDB, pgvector HNSW index, Postgres heap (pgvector as bytea/TOAST), Weaviate. All others are Provisional (single trajectory) per SPEC §5 — replication is the next experiment.
 

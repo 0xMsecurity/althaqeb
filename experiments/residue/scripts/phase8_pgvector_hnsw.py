@@ -41,7 +41,8 @@ print("[ext]", psql("CREATE EXTENSION vector; SELECT extversion FROM pg_extensio
 
 psql(f"CREATE TABLE docs(id int primary key, embedding vector({DIM}), t text)")
 def vlit(v): return "[" + ",".join(f"{x:.9g}" for x in v) + "]"   # float32 round-trip precision
-rng=np.random.default_rng(0); fv=rng.standard_normal((300,DIM)).astype(np.float32)
+SEED=int(sys.argv[1]) if len(sys.argv)>1 else 0
+rng=np.random.default_rng(SEED); fv=rng.standard_normal((300,DIM)).astype(np.float32)
 fv/=np.linalg.norm(fv,axis=1,keepdims=True)
 rows=[f"({i},'{vlit(orig[i])}','{POISON[i][:40]}')" for i in range(5)]
 rows+=[f"({100+i},'{vlit(fv[i])}','benign {i}')" for i in range(300)]
@@ -107,5 +108,7 @@ out={"engine":"pgvector HNSW index","pg_version":"PostgreSQL 18.4 (Debian)","pgv
                f"{'PURGES' if present_after_vacuum < present_after_delete else 'does NOT purge'} "
                f"the index residue ({present_after_vacuum}/5 after VACUUM). "
                "Bounded by routine (auto)vacuum, unlike Chroma."}
-op=os.path.join(ROOT,"results","phase8_pgvector_hnsw.json")
+out["seed"]=SEED
+name="phase8_pgvector_hnsw.json" if SEED==0 else f"phase8_pgvector_hnsw_seed{SEED}.json"
+op=os.path.join(ROOT,"results",name)
 json.dump(out,open(op,"w"),indent=2); print("[results]",op)

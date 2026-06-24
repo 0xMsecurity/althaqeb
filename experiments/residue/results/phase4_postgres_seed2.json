@@ -1,0 +1,59 @@
+{
+  "engine": "Postgres heap (pgvector vector as bytea/TOAST)",
+  "pg_version": "PostgreSQL 17 (Debian)",
+  "dim": 768,
+  "n_poison": 5,
+  "method": "exact float32 byte-prefix (1900B) presence in heap+TOAST relation files; live-filler positive control; autovacuum OFF so VACUUM is explicit",
+  "checkpoints": {
+    "BEFORE_delete": {
+      "heap_bytes": 1277952,
+      "poison_present": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "n_poison_present": 5,
+      "posctrl_filler_present": true
+    },
+    "AFTER_delete": {
+      "heap_bytes": 1277952,
+      "poison_present": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "n_poison_present": 5,
+      "posctrl_filler_present": true
+    },
+    "AFTER_VACUUM": {
+      "heap_bytes": 1277952,
+      "poison_present": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "n_poison_present": 4,
+      "posctrl_filler_present": true
+    },
+    "AFTER_VACUUM_FULL": {
+      "heap_bytes": 1253376,
+      "poison_present": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "n_poison_present": 0,
+      "posctrl_filler_present": true
+    }
+  },
+  "verdict": "survives plain VACUUM (4/5 still present); VACUUM FULL purges (0/5). Manual-only reclamation, unlike the auto-purging vector indexes.",
+  "seed": 2
+}

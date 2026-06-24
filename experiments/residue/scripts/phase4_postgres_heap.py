@@ -49,7 +49,8 @@ time.sleep(1)
 psql("CREATE TABLE poison(id int primary key, v bytea, t text)")
 psql("ALTER TABLE poison ALTER COLUMN v SET STORAGE EXTERNAL")  # out-of-line, uncompressed
 # insert 5 poison + 300 filler
-rng = np.random.default_rng(0); fv = rng.standard_normal((300, DIM)).astype(np.float32)
+SEED = int(sys.argv[1]) if len(sys.argv) > 1 else 0
+rng = np.random.default_rng(SEED); fv = rng.standard_normal((300, DIM)).astype(np.float32)
 def hexlit(b): return "\\x" + b.hex()
 rows = []
 for i in range(5): rows.append(f"({i},'{hexlit(orig[i].tobytes())}','{POISON[i][:40]}')")
@@ -103,7 +104,9 @@ out = {"engine": "Postgres heap (pgvector vector as bytea/TOAST)", "pg_version":
        "verdict": f"survives plain VACUUM ({after_vac}/5 still present); VACUUM FULL "
                   f"{'purges' if after_full < after_vac else 'does NOT purge'} ({after_full}/5). "
                   "Manual-only reclamation, unlike the auto-purging vector indexes."}
-json.dump(out, open(os.path.join(ROOT, "results", "phase4_postgres.json"), "w"), indent=2)
-print("[results]", os.path.join(ROOT, "results", "phase4_postgres.json"))
+out["seed"] = SEED
+name = "phase4_postgres.json" if SEED == 0 else f"phase4_postgres_seed{SEED}.json"
+json.dump(out, open(os.path.join(ROOT, "results", name), "w"), indent=2)
+print("[results]", os.path.join(ROOT, "results", name))
 sh(f'{PGBIN}/pg_ctl -D {PGDATA} stop -m fast')
 print("[pg stopped]")

@@ -71,8 +71,11 @@ Exact float32 byte-substring search (raw + L2-normalized) of the on-disk store, 
 - note: EVIDENCE GAP CLOSED 2026-06-24: phase8 re-run now emits results/phase8_pgvector_hnsw.json (PG18.4 + pgvector 0.8.3, autovacuum off so VACUUM is explicit). Routine (auto)vacuum self-cleans the index — unlike Chroma.
 - measured:
   - phase8: BEFORE/AFTER delete 5/5 in HNSW index (cos 1.0, posctrl 1.0); AFTER plain VACUUM 0/5 (cos ~0.13, posctrl still 1.0); VACUUM FULL + REINDEX also 0/5
+  - phase8 REPLICATED across seeds 0/1/2: identical class — 5/5 after delete → 0/5 after plain VACUUM in every seed, posctrl 1.0 throughout
 - evidence (committed result files):
   - `experiments/residue/results/phase8_pgvector_hnsw.json`
+  - `experiments/residue/results/phase8_pgvector_hnsw_seed1.json`
+  - `experiments/residue/results/phase8_pgvector_hnsw_seed2.json`
 
 ### Postgres heap (pgvector as bytea/TOAST) (userspace PostgreSQL)
 - category: RDBMS heap (vectors stored as bytea TOAST, not an index)
@@ -81,8 +84,11 @@ Exact float32 byte-substring search (raw + L2-normalized) of the on-disk store, 
 - note: EVIDENCE GAP CLOSED 2026-06-24: phase4 re-run now emits structured per-checkpoint results (PG17, autovacuum off). Plain VACUUM does not reliably purge dead-tuple vector bytes; VACUUM FULL does.
 - measured:
   - phase4: BEFORE/AFTER delete 5/5 present in heap+TOAST (posctrl ok); AFTER plain VACUUM 4/5 still present; AFTER VACUUM FULL 0/5 (table rewrite), posctrl filler present throughout
+  - phase4 REPLICATED across seeds 0/1/2: identical pattern — 5/5 after delete → 4/5 after plain VACUUM → 0/5 only after VACUUM FULL, in every seed
 - evidence (committed result files):
   - `experiments/residue/results/phase4_postgres.json`
+  - `experiments/residue/results/phase4_postgres_seed1.json`
+  - `experiments/residue/results/phase4_postgres_seed2.json`
 
 ### Weaviate (1.28.2)
 - category: vector DB (Go, LSM-tree + HNSW commitlog)

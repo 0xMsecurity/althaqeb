@@ -1,0 +1,71 @@
+{
+  "engine": "pgvector HNSW index",
+  "pg_version": "PostgreSQL 18.4 (Debian)",
+  "pgvector_dim": 768,
+  "method": "sliding float32[dim] window max-cosine over HNSW index relation files (raw), live-filler positive control; autovacuum OFF so VACUUM is explicit",
+  "n_poison": 5,
+  "checkpoints": {
+    "BEFORE_delete": {
+      "idx_bytes": 1261568,
+      "poison_cos_in_index": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "n_present_cos>0.999": 5,
+      "posctrl_filler_cos": 1.0
+    },
+    "AFTER_delete": {
+      "idx_bytes": 1261568,
+      "poison_cos_in_index": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "n_present_cos>0.999": 5,
+      "posctrl_filler_cos": 1.0
+    },
+    "AFTER_VACUUM": {
+      "idx_bytes": 1261568,
+      "poison_cos_in_index": [
+        0.1362,
+        0.1374,
+        0.1237,
+        0.1292,
+        0.1495
+      ],
+      "n_present_cos>0.999": 0,
+      "posctrl_filler_cos": 1.0
+    },
+    "AFTER_VACUUM_FULL": {
+      "idx_bytes": 1236992,
+      "poison_cos_in_index": [
+        0.1362,
+        0.1374,
+        0.1237,
+        0.1292,
+        0.1495
+      ],
+      "n_present_cos>0.999": 0,
+      "posctrl_filler_cos": 1.0
+    },
+    "AFTER_REINDEX": {
+      "idx_bytes": 1236992,
+      "poison_cos_in_index": [
+        0.1362,
+        0.1374,
+        0.1237,
+        0.1292,
+        0.1495
+      ],
+      "n_present_cos>0.999": 0,
+      "posctrl_filler_cos": 1.0
+    }
+  },
+  "verdict": "present after delete (5/5); plain VACUUM PURGES the index residue (0/5 after VACUUM). Bounded by routine (auto)vacuum, unlike Chroma.",
+  "seed": 1
+}
