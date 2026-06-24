@@ -1,0 +1,79 @@
+{
+  "trials": [
+    {
+      "seed": 0,
+      "checkpoints": {
+        "BEFORE_delete": {
+          "poison_present": 2,
+          "posctrl": true,
+          "bytes": 3194880
+        },
+        "AFTER_delete": {
+          "poison_present": 0,
+          "posctrl": true,
+          "bytes": 3194880,
+          "logical_remaining": 0
+        },
+        "AFTER_VACUUM": {
+          "poison_present": 0,
+          "posctrl": true,
+          "bytes": 3194880
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "checkpoints": {
+        "BEFORE_delete": {
+          "poison_present": 2,
+          "posctrl": true,
+          "bytes": 3194880
+        },
+        "AFTER_delete": {
+          "poison_present": 0,
+          "posctrl": true,
+          "bytes": 3194880,
+          "logical_remaining": 0
+        },
+        "AFTER_VACUUM": {
+          "poison_present": 0,
+          "posctrl": true,
+          "bytes": 3194880
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "checkpoints": {
+        "BEFORE_delete": {
+          "poison_present": 2,
+          "posctrl": true,
+          "bytes": 3194880
+        },
+        "AFTER_delete": {
+          "poison_present": 0,
+          "posctrl": true,
+          "bytes": 3194880,
+          "logical_remaining": 0
+        },
+        "AFTER_VACUUM": {
+          "poison_present": 0,
+          "posctrl": true,
+          "bytes": 3194880
+        }
+      }
+    }
+  ],
+  "summary": {
+    "engine": "sqlite-vec 0.1.9",
+    "n_trials": 3,
+    "poison_present_before_delete_per_seed": [
+      2,
+      2,
+      2
+    ],
+    "positive_control_held": true,
+    "window_class_observed": "inconclusive (detector-limited)",
+    "verdict": "INCONCLUSIVE \u2014 positive control holds but only [2, 2, 2]/5 poison are byte-present BEFORE any delete: SQLite stores the vector chunk across overflow pages whose 4-byte page pointers split the contiguous float32 stream, so full-vector byte-exact matching under-counts. Needs a SQLite-page-aware (overflow-chain reassembling) detector. NOT classified. (SPEC \u00a79)"
+  }
+}

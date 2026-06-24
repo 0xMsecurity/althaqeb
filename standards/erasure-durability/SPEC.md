@@ -140,6 +140,15 @@ a known blind spot that callers MUST respect:
 - **Positive control must match format.** The live positive-control vector MUST be stored in
   the same format as the deleted target, so a passing control proves the detector can see
   *that* format — not merely float32.
+- **Non-contiguous on-disk layout defeats full-vector matching.** Some engines split a stored
+  vector across non-contiguous bytes — e.g. SQLite (and `sqlite-vec`) stores large chunks across
+  **overflow pages**, each prefixed with a 4-byte next-page pointer that interrupts the float32
+  stream every page. Evidence (`phase23_sqlitevec.json`): with the positive control passing,
+  only 2/5 poison vectors are byte-present **before any delete** — the detector under-counts, so
+  deletion durability cannot be measured this way. Such engines require a **storage-aware
+  detector** (e.g. one that reassembles SQLite overflow chains) and are reported INCONCLUSIVE /
+  NOT classified until one exists — never as `VEDC-N`. A drop in the positive control OR an
+  unexpectedly low before-delete count is the signal that the detector does not fit the engine.
 
 Other bounds: text invertibility is demonstrated for gtr-base embeddings only (vec2text ships
 gtr + ada-002); residue *existence* is embedding-model-independent. Backups, replication logs,
