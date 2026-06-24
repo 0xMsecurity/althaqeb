@@ -244,6 +244,50 @@ def _stream_search(path, needles, chunk=1 << 24):
             tail = window[-overlap:] if overlap > 0 else b""
     return found
 
+def _sqlite_page_size(path):
+    """Return the SQLite page size (header offset 16, big-endian u16; value 1 -> 65536) if the
+    file is a SQLite database, else None."""
+    try:
+        with open(path, "rb") as f:
+            hdr = f.read(18)
+    except Exception:
+        return None
+    if hdr[:16] != b"SQLite format 3\x00":
+        return None
+    ps = int.from_bytes(hdr[16:18], "big")
+    return 65536 if ps == 1 else ps
+
+def _sqlite_deint_search(path, needles, pages_per_block=4096):
+    """SQLite stores large values across OVERFLOW PAGES, each prefixed with a 4-byte big-endian
+    next-page pointer that interrupts the byte stream every page. A vector spanning an overflow
+    chain is therefore not a contiguous substring of the raw file. This rebuilds a DE-INTERRUPTED
+    stream (each page's bytes[4:], concatenated) — in which an overflow-spanning vector becomes
+    contiguous — and searches it, streamed in page-aligned blocks with an overlap carry so a
+    needle straddling a block boundary is still found. Returns the set of matched needle indices.
+    Engines this matters for: sqlite-vec and any SQLite-backed store. (SPEC §9.)"""
+    ps = _sqlite_page_size(path)
+    if not ps or not needles:
+        return set()
+    found = set()
+    overlap = max(len(n) for _, n in needles) - 1
+    with open(path, "rb") as fh:
+        tail = b""
+        while True:
+            block = fh.read(ps * pages_per_block)   # page-aligned (SQLite files are page multiples)
+            if not block:
+                break
+            de = bytearray()
+            for off in range(0, len(block) - (len(block) % ps), ps):
+                de += block[off + 4: off + ps]       # drop the 4-byte overflow next-page pointer
+            window = tail + bytes(de)
+            for i, n in needles:
+                if i not in found and n in window:
+                    found.add(i)
+            if len(found) == len(needles):
+                break
+            tail = window[-overlap:] if overlap > 0 else b""
+    return found
+
 def match_targets(path, targets):
     """Report which target vectors (float32 rows) are physically present on disk, by exact
     byte substring (raw AND L2-normalized — engines using cosine store normalized). Alignment-
@@ -252,7 +296,10 @@ def match_targets(path, targets):
     Each file is searched independently and streamed in bounded chunks: memory stays O(chunk),
     not O(store size), so this runs on multi-GB production stores. Searching per file (rather than
     over a concatenation of all files) also removes spurious matches that could straddle a
-    file boundary — a stored vector always lives within a single file."""
+    file boundary — a stored vector always lives within a single file.
+
+    For SQLite databases (sqlite-vec et al.) it ALSO searches a de-interrupted stream so vectors
+    split across overflow pages are still found (raw-only byte search under-counts these)."""
     files = [f for f in glob.glob(os.path.join(path, "**", "*"), recursive=True) if os.path.isfile(f)]
     # Build the needle list: each target contributes its raw bytes and, if non-zero, its
     # L2-normalized bytes (cosine engines store normalized). Both map back to the same index.
@@ -271,6 +318,9 @@ def match_targets(path, targets):
         remaining = [(i, n) for (i, n) in needles if i not in present]
         if remaining:
             present |= _stream_search(f, remaining)
+        remaining = [(i, n) for (i, n) in needles if i not in present]
+        if remaining:                                   # SQLite overflow-aware pass (no-op on non-SQLite files)
+            present |= _sqlite_deint_search(f, remaining)
     res = [{"index": i, "present": (i in present)} for i in range(len(targets))]
     return res, len(files), store_bytes
 

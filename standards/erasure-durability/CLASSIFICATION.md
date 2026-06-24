@@ -14,6 +14,7 @@
 | **Weaviate** | VEDC-AT (Auto / timed) | — | Confirmed | `phase10_weaviate.json`, `phase14_weaviate_cleanup.json`, `phase19_weaviate_multiseed.json` |
 | **FAISS (flat, remove_ids)** | VEDC-N (None) | — | Provisional | `phase3_cross_backend.json` |
 | **Qdrant (local/embedded)** | VEDC-N (None) | — | Provisional | `phase3_cross_backend.json` |
+| **sqlite-vec** | VEDC-N (None) | — | Confirmed | `phase24_sqlite_detector.json` |
 
 ## Classes (from SPEC.md §5)
 
@@ -29,7 +30,7 @@
 
 ## Reading
 
-- 6 of 8 engines expose a post-delete recovery window.
+- 6 of 9 engines expose a post-delete recovery window.
 - **VEDC-U (unbounded): ChromaDB** — the only class with no observed reclamation.
 - Confirmed (multi-seed/cross-version/multi-condition) leak classifications: ChromaDB, Qdrant (server), pgvector HNSW index, Postgres heap (pgvector as bytea/TOAST), Weaviate. All others are Provisional (single trajectory) per SPEC §5 — replication is the next experiment.
 

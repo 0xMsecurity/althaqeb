@@ -205,6 +205,27 @@
       "confidence": "high",
       "replication": "single-run (n=1, phase3) — negative control",
       "notes": "Negative control. NOT the Rust Qdrant server (separate row, which DOES leak a window). VEDC-N is float32-scoped (SPEC §9): not tested against quantized storage."
+    },
+    {
+      "engine": "sqlite-vec",
+      "version": "0.1.9 (SQLite vec0 virtual table)",
+      "category": "embedded vector index inside SQLite",
+      "residue_after_delete": false,
+      "recovery_method": "n/a — vec0 rewrites/compacts its vector chunk on delete",
+      "self_identifying_deletion": false,
+      "reclamation_trigger": "vec0 chunk rewrite at delete (commit)",
+      "window_class": "none",
+      "window_seconds": null,
+      "window_note": "5/5 present before delete (via SQLite page-aware detector), 0/5 after a committed delete (positive control still found), 0/5 after VACUUM",
+      "measured": [
+        "phase24: SQLite-page-aware (overflow-de-interrupted) detector recovers 5/5 before delete where raw byte-search saw only 2/5; AFTER committed delete 0/5 (posctrl held), AFTER VACUUM 0/5 — replicated across seeds 0/1/2"
+      ],
+      "evidence": [
+        "experiments/residue/results/phase24_sqlite_detector.json"
+      ],
+      "confidence": "high",
+      "replication": "multi-seed (×3, phase24 seeds 0/1/2)",
+      "notes": "REAL engine that erases on delete — NOT a synthetic negative control like FAISS. Required a SQLite-page-aware detector (overflow-page de-interruption, now in vdbresidue match mode; SPEC §9) because raw byte-search under-counts when SQLite splits a vector across overflow pages. First production engine measured with no recoverable post-delete residue (good privacy default)."
     }
   ]
 }

@@ -1,0 +1,106 @@
+{
+  "trials": [
+    {
+      "seed": 0,
+      "checkpoints": {
+        "BEFORE_delete": {
+          "poison_aware": 5,
+          "poison_raw_only": 2,
+          "posctrl_aware": true,
+          "bytes": 3194880
+        },
+        "AFTER_delete": {
+          "poison_aware": 0,
+          "poison_raw_only": 0,
+          "posctrl_aware": true,
+          "bytes": 3194880,
+          "logical_remaining": 0
+        },
+        "AFTER_VACUUM": {
+          "poison_aware": 0,
+          "poison_raw_only": 0,
+          "posctrl_aware": true,
+          "bytes": 3194880
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "checkpoints": {
+        "BEFORE_delete": {
+          "poison_aware": 5,
+          "poison_raw_only": 2,
+          "posctrl_aware": true,
+          "bytes": 3194880
+        },
+        "AFTER_delete": {
+          "poison_aware": 0,
+          "poison_raw_only": 0,
+          "posctrl_aware": true,
+          "bytes": 3194880,
+          "logical_remaining": 0
+        },
+        "AFTER_VACUUM": {
+          "poison_aware": 0,
+          "poison_raw_only": 0,
+          "posctrl_aware": true,
+          "bytes": 3194880
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "checkpoints": {
+        "BEFORE_delete": {
+          "poison_aware": 5,
+          "poison_raw_only": 2,
+          "posctrl_aware": true,
+          "bytes": 3194880
+        },
+        "AFTER_delete": {
+          "poison_aware": 0,
+          "poison_raw_only": 0,
+          "posctrl_aware": true,
+          "bytes": 3194880,
+          "logical_remaining": 0
+        },
+        "AFTER_VACUUM": {
+          "poison_aware": 0,
+          "poison_raw_only": 0,
+          "posctrl_aware": true,
+          "bytes": 3194880
+        }
+      }
+    }
+  ],
+  "summary": {
+    "engine": "sqlite-vec 0.1.9",
+    "n_valid": 3,
+    "detector_gain": {
+      "0": {
+        "raw_only_before": 2,
+        "page_aware_before": 5
+      },
+      "1": {
+        "raw_only_before": 2,
+        "page_aware_before": 5
+      },
+      "2": {
+        "raw_only_before": 2,
+        "page_aware_before": 5
+      }
+    },
+    "poison_after_delete_per_valid": [
+      0,
+      0,
+      0
+    ],
+    "poison_after_vacuum_per_valid": [
+      0,
+      0,
+      0
+    ],
+    "window_class_observed": "none",
+    "verdict": "detector FIXED before-delete (raw-only 2/5 -> page-aware 5/5). REPLICATED across 3 seeds: 5/5 present before delete, 0/5 after a committed delete (positive control still found) -> NO recoverable residue. vec0 compacts/rewrites its vector chunk on delete -> VEDC-N (good privacy)."
+  }
+}

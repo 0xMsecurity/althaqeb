@@ -74,9 +74,26 @@ try:
 except ImportError:
     pass
 
+# ---- SQLite page-aware detector: a vector split across an overflow-page boundary must be
+# found by the de-interrupted search even though raw byte-search misses it (synthetic, no deps).
+PS = 512
+sbuf = bytearray(PS * 3)
+sbuf[0:16] = b"SQLite format 3\x00"; sbuf[16:18] = PS.to_bytes(2, "big")
+svec = np.arange(64, dtype=np.float32); svb = svec.tobytes()        # 256-byte known vector
+sbuf[PS*2-200:PS*2] = svb[0:200]                                    # last 200 B of page 1 content
+sbuf[PS*2+4:PS*2+4+56] = svb[200:256]                               # after page 2's 4-byte ptr
+SDIR = os.path.join(ROOT, "db", "_selftest_sqlite"); shutil.rmtree(SDIR, ignore_errors=True); os.makedirs(SDIR)
+spath = os.path.join(SDIR, "store.db"); open(spath, "wb").write(bytes(sbuf))
+raw_hit = V._stream_search(spath, [(0, svb)]) == {0}               # raw should MISS (split by ptr)
+aware_hit = V._sqlite_deint_search(spath, [(0, svb)]) == {0}       # page-aware should FIND
+mres_sq, _, _ = V.match_targets(SDIR, svec[None, :])               # union path -> present
+ok_sqlite = (not raw_hit) and aware_hit and mres_sq[0]["present"]
+shutil.rmtree(SDIR, ignore_errors=True)
+
 print(f"backend={backend} expected_deleted={NDEL} recovered={len(labels)} bit_identical_matched={matched} "
       f"match_present={sum(r['present'] for r in mres)}/{NDEL} match_false_positives={sum(r['present'] for r in mrnd)} "
-      f"stream_boundary={'ok' if ok_stream else 'FAIL'} {milvus_status}")
-if ok_backend and ok_count and ok_fidelity and ok_match and ok_stream and ok_milvus:
+      f"stream_boundary={'ok' if ok_stream else 'FAIL'} {milvus_status} "
+      f"sqlite_pageaware={'ok' if ok_sqlite else 'FAIL'}")
+if ok_backend and ok_count and ok_fidelity and ok_match and ok_stream and ok_milvus and ok_sqlite:
     print("SELFTEST PASS"); sys.exit(0)
 print("SELFTEST FAIL"); sys.exit(1)

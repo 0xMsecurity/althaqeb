@@ -23,6 +23,7 @@ Exact float32 byte-substring search (raw + L2-normalized) of the on-disk store, 
 | **Milvus (standalone)** (2.5.10 (etcd + MinIO + Milvus)) | **YES** | yes | GC after a completed high-ratio compaction | auto-timed | ~360s | high |
 | **FAISS (flat, remove_ids)** (faiss-cpu) | no (true negative) | — | reserialize-on-write compacts | none | — | high |
 | **Qdrant (local/embedded)** (qdrant-client local mode) | no (true negative) | — | embedded rewrite-on-close compacts | none | — | high |
+| **sqlite-vec** (0.1.9 (SQLite vec0 virtual table)) | no (true negative) | — | vec0 chunk rewrite at delete (commit) | none | — | high |
 
 ## Window-class taxonomy
 
@@ -139,4 +140,14 @@ Exact float32 byte-substring search (raw + L2-normalized) of the on-disk store, 
   - phase3: exact_byte all false, best_cosine [0.07,0.069,0.053,0.082,0.059], 0/5 present
 - evidence (committed result files):
   - `experiments/residue/results/phase3_cross_backend.json`
+
+### sqlite-vec (0.1.9 (SQLite vec0 virtual table))
+- category: embedded vector index inside SQLite
+- recovery method: n/a — vec0 rewrites/compacts its vector chunk on delete
+- window: 5/5 present before delete (via SQLite page-aware detector), 0/5 after a committed delete (positive control still found), 0/5 after VACUUM
+- note: REAL engine that erases on delete — NOT a synthetic negative control like FAISS. Required a SQLite-page-aware detector (overflow-page de-interruption, now in vdbresidue match mode; SPEC §9) because raw byte-search under-counts when SQLite splits a vector across overflow pages. First production engine measured with no recoverable post-delete residue (good privacy default).
+- measured:
+  - phase24: SQLite-page-aware (overflow-de-interrupted) detector recovers 5/5 before delete where raw byte-search saw only 2/5; AFTER committed delete 0/5 (posctrl held), AFTER VACUUM 0/5 — replicated across seeds 0/1/2
+- evidence (committed result files):
+  - `experiments/residue/results/phase24_sqlite_detector.json`
 
