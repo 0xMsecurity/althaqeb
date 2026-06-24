@@ -81,14 +81,16 @@
       "window_note": "purged at ~70s with cleanupIntervalSeconds=5; production default interval is 300s",
       "measured": [
         "phase10: 5/5 present after delete; persisted ≥ tested churn window",
-        "phase14: cleanupIntervalSeconds=5 → purged_at_s = 70"
+        "phase14: cleanupIntervalSeconds=5 → purged_at_s = 70",
+        "phase19: REPLICATED across 3 seeds — 5/5 present through 45s, purged 0/5 at 70s in every trial (purge 70s min=max=mean), positive control held all trials"
       ],
       "evidence": [
         "experiments/residue/results/phase10_weaviate.json",
-        "experiments/residue/results/phase14_weaviate_cleanup.json"
+        "experiments/residue/results/phase14_weaviate_cleanup.json",
+        "experiments/residue/results/phase19_weaviate_multiseed.json"
       ],
       "confidence": "high",
-      "replication": "single-seed, 2 conditions (phase10 churn window, phase14 cleanup timeline)",
+      "replication": "multi-seed (×3, phase19 seeds 0/1/2; purge 70s all trials) + 2 conditions (phase10 churn, phase14 timeline)",
       "notes": "SELF-CORRECTION: earlier called durable on a too-short 20s window; phase14 shows it auto-purges. Belongs with the bounded engines, not Chroma."
     },
     {

@@ -92,9 +92,11 @@ Exact float32 byte-substring search (raw + L2-normalized) of the on-disk store, 
 - measured:
   - phase10: 5/5 present after delete; persisted ≥ tested churn window
   - phase14: cleanupIntervalSeconds=5 → purged_at_s = 70
+  - phase19: REPLICATED across 3 seeds — 5/5 present through 45s, purged 0/5 at 70s in every trial (purge 70s min=max=mean), positive control held all trials
 - evidence (committed result files):
   - `experiments/residue/results/phase10_weaviate.json`
   - `experiments/residue/results/phase14_weaviate_cleanup.json`
+  - `experiments/residue/results/phase19_weaviate_multiseed.json`
 
 ### Milvus (standalone) (2.5.10 (etcd + MinIO + Milvus))
 - category: distributed vector DB (parquet segment binlogs + delta tombstones)

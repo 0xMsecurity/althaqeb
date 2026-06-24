@@ -11,7 +11,7 @@
 | **pgvector HNSW index** | VEDC-AU (Auto / untimed) | — | Provisional | `phase8_pgvector_hnsw.json` |
 | **Postgres heap (pgvector as bytea/TOAST)** | VEDC-M+S (Manual-only) | yes | Provisional | `phase4_postgres.json` |
 | **Milvus (standalone)** | VEDC-AT+S (Auto / timed) | yes | Provisional | `phase11_milvus_standalone.json`, `phase12_milvus_highratio.json`, `phase15_milvus_gctimeline.json` |
-| **Weaviate** | VEDC-AT (Auto / timed) | — | Provisional | `phase10_weaviate.json`, `phase14_weaviate_cleanup.json` |
+| **Weaviate** | VEDC-AT (Auto / timed) | — | Confirmed | `phase10_weaviate.json`, `phase14_weaviate_cleanup.json`, `phase19_weaviate_multiseed.json` |
 | **FAISS (flat, remove_ids)** | VEDC-N (None) | — | Provisional | `phase3_cross_backend.json` |
 | **Qdrant (local/embedded)** | VEDC-N (None) | — | Provisional | `phase3_cross_backend.json` |
 
@@ -31,5 +31,5 @@
 
 - 6 of 8 engines expose a post-delete recovery window.
 - **VEDC-U (unbounded): ChromaDB** — the only class with no observed reclamation.
-- Confirmed (multi-seed/cross-version/multi-condition) leak classifications: ChromaDB. All others are Provisional (single trajectory) per SPEC §5 — replication is the next experiment.
+- Confirmed (multi-seed/cross-version/multi-condition) leak classifications: ChromaDB, Weaviate. All others are Provisional (single trajectory) per SPEC §5 — replication is the next experiment.
 

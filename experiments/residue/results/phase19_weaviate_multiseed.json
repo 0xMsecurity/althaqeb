@@ -1,0 +1,141 @@
+{
+  "trials": [
+    {
+      "seed": 0,
+      "before_delete_present": 5,
+      "before_delete_posctrl": true,
+      "timeline": [
+        {
+          "t_s": 0,
+          "poison_present": 5,
+          "posctrl": true
+        },
+        {
+          "t_s": 20,
+          "poison_present": 5,
+          "posctrl": true
+        },
+        {
+          "t_s": 45,
+          "poison_present": 5,
+          "posctrl": true
+        },
+        {
+          "t_s": 70,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 95,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 130,
+          "poison_present": 0,
+          "posctrl": true
+        }
+      ],
+      "purged_at_s": 70
+    },
+    {
+      "seed": 1,
+      "before_delete_present": 5,
+      "before_delete_posctrl": true,
+      "timeline": [
+        {
+          "t_s": 0,
+          "poison_present": 5,
+          "posctrl": true
+        },
+        {
+          "t_s": 20,
+          "poison_present": 5,
+          "posctrl": true
+        },
+        {
+          "t_s": 45,
+          "poison_present": 5,
+          "posctrl": true
+        },
+        {
+          "t_s": 70,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 95,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 130,
+          "poison_present": 0,
+          "posctrl": true
+        }
+      ],
+      "purged_at_s": 70
+    },
+    {
+      "seed": 2,
+      "before_delete_present": 5,
+      "before_delete_posctrl": true,
+      "timeline": [
+        {
+          "t_s": 0,
+          "poison_present": 5,
+          "posctrl": true
+        },
+        {
+          "t_s": 20,
+          "poison_present": 5,
+          "posctrl": true
+        },
+        {
+          "t_s": 45,
+          "poison_present": 5,
+          "posctrl": true
+        },
+        {
+          "t_s": 70,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 95,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 130,
+          "poison_present": 0,
+          "posctrl": true
+        }
+      ],
+      "purged_at_s": 70
+    }
+  ],
+  "summary": {
+    "engine": "weaviate 1.28.2",
+    "cleanupIntervalSeconds": 5,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "n_trials": 3,
+    "n_valid": 3,
+    "purged_at_s_per_seed": {
+      "0": 70,
+      "1": 70,
+      "2": 70
+    },
+    "all_trials_purged": true,
+    "purge_s_min": 70,
+    "purge_s_max": 70,
+    "purge_s_mean": 70.0,
+    "positive_control_held_all_trials": true,
+    "class": "VEDC-AT (auto/timed)",
+    "verdict": "REPLICATED across 3 seeds: residue purged in every trial (purge 70-70s); class VEDC-AT stable -> Confirmed"
+  }
+}
