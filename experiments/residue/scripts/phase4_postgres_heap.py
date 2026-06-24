@@ -78,22 +78,32 @@ def scan():
     filler0 = fv[0].tobytes()[:1900] in raw
     return pois, filler0, len(raw)
 
-p, f0, n = scan()
-print(f"[BEFORE delete] heap={n}B  poison_present={p}  POSCTRL_filler={f0}")
+CHECKPOINTS = {}
+def record(tag):
+    p, f0, n = scan()
+    print(f"[{tag}] heap={n}B  poison_present={p}  POSCTRL_filler={f0}")
+    CHECKPOINTS[tag] = {"heap_bytes": n, "poison_present": [bool(x) for x in p],
+                        "n_poison_present": int(sum(p)), "posctrl_filler_present": bool(f0)}
+
+record("BEFORE_delete")
 psql("DELETE FROM poison WHERE id < 5")
 print("[logical after delete] count id<5 =", psql("SELECT count(*) FROM poison WHERE id<5"))
-p, f0, n = scan()
-print(f"[AFTER delete, pre-VACUUM] heap={n}B  poison_present={p}  POSCTRL_filler={f0}")
-psql("VACUUM poison")
-p, f0, n = scan()
-print(f"[AFTER plain VACUUM] heap={n}B  poison_present={p}  POSCTRL_filler={f0}")
-psql("VACUUM FULL poison")
-p, f0, n = scan()  # relfiles() re-queries paths, handles relfilenode change
-print(f"[AFTER VACUUM FULL] heap={n}B  poison_present={p}  POSCTRL_filler={f0}")
+record("AFTER_delete")
+psql("VACUUM poison"); record("AFTER_VACUUM")
+psql("VACUUM FULL poison"); record("AFTER_VACUUM_FULL")  # relfiles() re-queries paths, handles relfilenode change
 
 import json
-json.dump({"before_delete": True,
-           "note": "see stdout for staged residue presence"},
-          open(os.path.join(ROOT, "results", "phase4_postgres.json"), "w"))
+after_vac = CHECKPOINTS.get("AFTER_VACUUM", {}).get("n_poison_present", 0)
+after_full = CHECKPOINTS.get("AFTER_VACUUM_FULL", {}).get("n_poison_present", 0)
+out = {"engine": "Postgres heap (pgvector vector as bytea/TOAST)", "pg_version": "PostgreSQL 17 (Debian)",
+       "dim": DIM, "n_poison": 5,
+       "method": "exact float32 byte-prefix (1900B) presence in heap+TOAST relation files; live-filler "
+                 "positive control; autovacuum OFF so VACUUM is explicit",
+       "checkpoints": CHECKPOINTS,
+       "verdict": f"survives plain VACUUM ({after_vac}/5 still present); VACUUM FULL "
+                  f"{'purges' if after_full < after_vac else 'does NOT purge'} ({after_full}/5). "
+                  "Manual-only reclamation, unlike the auto-purging vector indexes."}
+json.dump(out, open(os.path.join(ROOT, "results", "phase4_postgres.json"), "w"), indent=2)
+print("[results]", os.path.join(ROOT, "results", "phase4_postgres.json"))
 sh(f'{PGBIN}/pg_ctl -D {PGDATA} stop -m fast')
 print("[pg stopped]")

@@ -74,14 +74,18 @@ def best_cos(raw, targets_n, step=4):
         if len(buf)>=20000: flush(); buf.clear()
         off+=step
     flush(); return best
+CHECKPOINTS={}
 def scan(tag):
     psql("CHECKPOINT")
     idx=files_for("docs_hnsw")
     idxraw=b"".join(open(f,"rb").read() for f in idx)
     pois=best_cos(idxraw, list(orig_n))
     pc=best_cos(idxraw, [fv0_n])[0]
+    n_present=sum(c>0.999 for c in pois)
     print(f"[{tag}] idx_bytes={len(idxraw)} | poison_cos_in_INDEX={[round(c,3) for c in pois]} "
-          f"| n_present(>0.999)={sum(c>0.999 for c in pois)} | POSCTRL_filler_cos={round(pc,3)}")
+          f"| n_present(>0.999)={n_present} | POSCTRL_filler_cos={round(pc,3)}")
+    CHECKPOINTS[tag]={"idx_bytes":len(idxraw),"poison_cos_in_index":[round(float(c),4) for c in pois],
+                      "n_present_cos>0.999":int(n_present),"posctrl_filler_cos":round(float(pc),4)}
 
 scan("BEFORE_delete")
 psql("DELETE FROM docs WHERE id < 5")
@@ -91,3 +95,17 @@ psql("VACUUM docs"); scan("AFTER_VACUUM")
 psql("VACUUM FULL docs"); scan("AFTER_VACUUM_FULL")
 psql("REINDEX INDEX docs_hnsw"); scan("AFTER_REINDEX")
 sh(f'{PGBIN}/pg_ctl -D {PGDATA} stop -m fast'); print("[stopped]")
+
+import json
+present_after_delete=CHECKPOINTS.get("AFTER_delete",{}).get("n_present_cos>0.999",0)
+present_after_vacuum=CHECKPOINTS.get("AFTER_VACUUM",{}).get("n_present_cos>0.999",0)
+out={"engine":"pgvector HNSW index","pg_version":"PostgreSQL 18.4 (Debian)","pgvector_dim":DIM,
+     "method":"sliding float32[dim] window max-cosine over HNSW index relation files (raw), "
+              "live-filler positive control; autovacuum OFF so VACUUM is explicit",
+     "n_poison":5,"checkpoints":CHECKPOINTS,
+     "verdict":f"present after delete ({present_after_delete}/5); plain VACUUM "
+               f"{'PURGES' if present_after_vacuum < present_after_delete else 'does NOT purge'} "
+               f"the index residue ({present_after_vacuum}/5 after VACUUM). "
+               "Bounded by routine (auto)vacuum, unlike Chroma."}
+op=os.path.join(ROOT,"results","phase8_pgvector_hnsw.json")
+json.dump(out,open(op,"w"),indent=2); print("[results]",op)

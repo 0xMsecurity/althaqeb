@@ -118,15 +118,15 @@
       "reclamation_trigger": "VACUUM FULL (survives plain VACUUM)",
       "window_class": "manual-only",
       "window_seconds": null,
-      "window_note": "survives delete and plain (auto)VACUUM; only VACUUM FULL purges",
+      "window_note": "5/5 after delete; survives plain VACUUM (4/5 bytes remain); only VACUUM FULL purges (0/5)",
       "measured": [
-        "phase4: residue present after delete (before_delete=true); survives-VACUUM / purged-by-VACUUM-FULL detail recorded in logs/pg.log stdout"
+        "phase4: BEFORE/AFTER delete 5/5 present in heap+TOAST (posctrl ok); AFTER plain VACUUM 4/5 still present; AFTER VACUUM FULL 0/5 (table rewrite), posctrl filler present throughout"
       ],
       "evidence": [
         "experiments/residue/results/phase4_postgres.json"
       ],
-      "confidence": "low",
-      "notes": "EVIDENCE GAP: phase4_postgres.json only records before_delete=true; the VACUUM-vs-VACUUM-FULL conclusion lives in logs/pg.log stdout, not the committed JSON. Re-run phase4 emitting structured checkpoints to upgrade confidence."
+      "confidence": "high",
+      "notes": "EVIDENCE GAP CLOSED 2026-06-24: phase4 re-run now emits structured per-checkpoint results (PG17, autovacuum off). Plain VACUUM does not reliably purge dead-tuple vector bytes; VACUUM FULL does."
     },
     {
       "engine": "pgvector HNSW index",
@@ -138,13 +138,15 @@
       "reclamation_trigger": "plain VACUUM",
       "window_class": "auto-untimed",
       "window_seconds": null,
-      "window_note": "present after delete (cos 1.0); plain VACUUM purges (cos → 0.13). Least leaky of the DBs.",
+      "window_note": "present 5/5 after delete (cos 1.0); plain VACUUM purges to 0/5 (cos → ~0.13). Least leaky of the DBs.",
       "measured": [
-        "STATE.md claim: present after delete, purged by plain autovacuum — NOT backed by a committed result file"
+        "phase8: BEFORE/AFTER delete 5/5 in HNSW index (cos 1.0, posctrl 1.0); AFTER plain VACUUM 0/5 (cos ~0.13, posctrl still 1.0); VACUUM FULL + REINDEX also 0/5"
       ],
-      "evidence": [],
-      "confidence": "unverified",
-      "notes": "EVIDENCE GAP: no committed structured result; only logs/pg18.log. Re-run phase8 and commit results/phase8_pgvector_hnsw.json to make this row build-verifiable."
+      "evidence": [
+        "experiments/residue/results/phase8_pgvector_hnsw.json"
+      ],
+      "confidence": "high",
+      "notes": "EVIDENCE GAP CLOSED 2026-06-24: phase8 re-run now emits results/phase8_pgvector_hnsw.json (PG18.4 + pgvector 0.8.3, autovacuum off so VACUUM is explicit). Routine (auto)vacuum self-cleans the index — unlike Chroma."
     },
     {
       "engine": "FAISS (flat, remove_ids)",

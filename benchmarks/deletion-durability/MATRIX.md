@@ -17,8 +17,8 @@ Exact float32 byte-substring search (raw + L2-normalized) of the on-disk store, 
 |---|---|---|---|---|---|---|
 | **ChromaDB** (1.5.9 (architectural across 0.5.23 → 1.5.9)) | **YES** | yes | none observed | unbounded | unbounded | high |
 | **Qdrant (server)** (qdrant/qdrant container (Rust engine)) | **YES** | — | vacuum optimizer | auto-untimed | — | high |
-| **pgvector HNSW index** (PG18 + pgvector 0.8.3) | **YES** | — | plain VACUUM | auto-untimed | — | unverified |
-| **Postgres heap (pgvector as bytea/TOAST)** (userspace PostgreSQL) | **YES** | yes | VACUUM FULL (survives plain VACUUM) | manual-only | — | low |
+| **pgvector HNSW index** (PG18 + pgvector 0.8.3) | **YES** | — | plain VACUUM | auto-untimed | — | high |
+| **Postgres heap (pgvector as bytea/TOAST)** (userspace PostgreSQL) | **YES** | yes | VACUUM FULL (survives plain VACUUM) | manual-only | — | high |
 | **Weaviate** (1.28.2) | **YES** | — | async tombstone cleanup | auto-timed | ~70s | high |
 | **Milvus (standalone)** (2.5.10 (etcd + MinIO + Milvus)) | **YES** | yes | GC after a completed high-ratio compaction | auto-timed | ~360s | high |
 | **FAISS (flat, remove_ids)** (faiss-cpu) | no (true negative) | — | reserialize-on-write compacts | none | — | high |
@@ -67,20 +67,20 @@ Exact float32 byte-substring search (raw + L2-normalized) of the on-disk store, 
 ### pgvector HNSW index (PG18 + pgvector 0.8.3)
 - category: RDBMS vector index (HNSW)
 - recovery method: index page byte scan
-- window: present after delete (cos 1.0); plain VACUUM purges (cos → 0.13). Least leaky of the DBs.
-- note: EVIDENCE GAP: no committed structured result; only logs/pg18.log. Re-run phase8 and commit results/phase8_pgvector_hnsw.json to make this row build-verifiable.
+- window: present 5/5 after delete (cos 1.0); plain VACUUM purges to 0/5 (cos → ~0.13). Least leaky of the DBs.
+- note: EVIDENCE GAP CLOSED 2026-06-24: phase8 re-run now emits results/phase8_pgvector_hnsw.json (PG18.4 + pgvector 0.8.3, autovacuum off so VACUUM is explicit). Routine (auto)vacuum self-cleans the index — unlike Chroma.
 - measured:
-  - STATE.md claim: present after delete, purged by plain autovacuum — NOT backed by a committed result file
+  - phase8: BEFORE/AFTER delete 5/5 in HNSW index (cos 1.0, posctrl 1.0); AFTER plain VACUUM 0/5 (cos ~0.13, posctrl still 1.0); VACUUM FULL + REINDEX also 0/5
 - evidence (committed result files):
-  - **none committed — evidence gap**
+  - `experiments/residue/results/phase8_pgvector_hnsw.json`
 
 ### Postgres heap (pgvector as bytea/TOAST) (userspace PostgreSQL)
 - category: RDBMS heap (vectors stored as bytea TOAST, not an index)
 - recovery method: dead-tuple / TOAST byte scan
-- window: survives delete and plain (auto)VACUUM; only VACUUM FULL purges
-- note: EVIDENCE GAP: phase4_postgres.json only records before_delete=true; the VACUUM-vs-VACUUM-FULL conclusion lives in logs/pg.log stdout, not the committed JSON. Re-run phase4 emitting structured checkpoints to upgrade confidence.
+- window: 5/5 after delete; survives plain VACUUM (4/5 bytes remain); only VACUUM FULL purges (0/5)
+- note: EVIDENCE GAP CLOSED 2026-06-24: phase4 re-run now emits structured per-checkpoint results (PG17, autovacuum off). Plain VACUUM does not reliably purge dead-tuple vector bytes; VACUUM FULL does.
 - measured:
-  - phase4: residue present after delete (before_delete=true); survives-VACUUM / purged-by-VACUUM-FULL detail recorded in logs/pg.log stdout
+  - phase4: BEFORE/AFTER delete 5/5 present in heap+TOAST (posctrl ok); AFTER plain VACUUM 4/5 still present; AFTER VACUUM FULL 0/5 (table rewrite), posctrl filler present throughout
 - evidence (committed result files):
   - `experiments/residue/results/phase4_postgres.json`
 
