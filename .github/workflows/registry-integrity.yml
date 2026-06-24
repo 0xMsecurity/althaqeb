@@ -1,0 +1,35 @@
+name: registry-integrity
+
+# Makes the NO-FAKE-RESULTS gate permanent: every push/PR re-validates that every
+# deletion-durability registry claim still traces to a committed result file, and that the
+# VEDC classification roster regenerates cleanly. Stdlib-only — no install step, no network.
+
+on:
+  push:
+    paths:
+      - "benchmarks/deletion-durability/**"
+      - "standards/erasure-durability/**"
+      - "experiments/residue/results/**"
+      - ".github/workflows/registry-integrity.yml"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Validate registry evidence (build gate)
+        run: python3 benchmarks/deletion-durability/build_matrix.py --check
+      - name: Validate VEDC classification
+        run: python3 standards/erasure-durability/classify.py --check
+      - name: Fail if generated artifacts are stale
+        run: |
+          python3 benchmarks/deletion-durability/build_matrix.py
+          python3 standards/erasure-durability/classify.py
+          git diff --exit-code -- benchmarks/deletion-durability/MATRIX.md \
+            standards/erasure-durability/CLASSIFICATION.md \
+            || (echo "::error::MATRIX.md / CLASSIFICATION.md are stale — run the generators and commit." && exit 1)

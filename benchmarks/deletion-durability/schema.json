@@ -17,7 +17,7 @@
         "required": [
           "engine", "version", "category", "residue_after_delete", "recovery_method",
           "self_identifying_deletion", "reclamation_trigger", "window_class",
-          "measured", "evidence", "confidence"
+          "measured", "evidence", "confidence", "replication"
         ],
         "properties": {
           "engine": {"type": "string"},
@@ -34,6 +34,8 @@
           "evidence": {"type": "array", "items": {"type": "string"},
             "description": "repo-root-relative paths to committed result files; build_matrix.py fails if any are missing"},
           "confidence": {"enum": ["high", "medium", "low", "unverified"]},
+          "replication": {"type": "string",
+            "description": "what replication backs this row, e.g. 'multi-seed (5) + cross-version' or 'single-run (n=1)'. Drives the standard's confirmed vs provisional conformance level."},
           "notes": {"type": "string"}
         }
       }

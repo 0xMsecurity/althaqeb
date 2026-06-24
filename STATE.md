@@ -141,6 +141,24 @@ artifact at [`benchmarks/deletion-durability/`](benchmarks/deletion-durability/)
 This is the engine-independent framing (escapes the "Chroma project" trap) and the seed of
 the `benchmarks/ taxonomies/ registries/` platform layout.
 
+## 4c. Up another layer: the VEDC standard (Registry → Standard)
+
+[`standards/erasure-durability/`](standards/erasure-durability/) defines **VEDC** — a normative
+classification of vector-store erasure durability (classes VEDC-U / AU / AT / M / N, `+S` for
+self-identifying deletion). `classify.py` is the **executable** conformance tool: it reuses the
+registry's evidence gate and generates `CLASSIFICATION.md`, so nothing unbacked can be
+classified. It assigns a conformance level — **Confirmed** (multi-seed/cross-version) vs
+**Provisional** (single trajectory). As of v0.1 only **ChromaDB (VEDC-U+S) is Confirmed**; the
+other 7 are Provisional → multi-seed replication is the named next experiment. The spec is
+Reviewer-#2-hardened: it disclaims novelty of the persistence phenomenon (Stahlberg SIGMOD'07,
+secure-deletion lit, GDPR Art.17), states the exact delta, and includes an anti-gaming /
+positive-control conformance rule and a dual-use ethics stance.
+
+CI: [`.github/workflows/registry-integrity.yml`](.github/workflows/registry-integrity.yml)
+re-runs both gates on every push/PR and fails if generated artifacts go stale → the
+NO-FAKE-RESULTS gate is now permanent, not manual. Governance: [`DOCTRINE.md`](DOCTRINE.md)
+(14 departments, Reality veto) operationalizes the board.
+
 ## 5. Open question for the next cycle (decide with the board, not with hope)
 
 The kernel survived saturation. The honest fork:

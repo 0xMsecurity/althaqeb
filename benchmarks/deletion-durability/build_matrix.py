@@ -29,6 +29,7 @@ REQUIRED = {
     "residue_after_delete": bool, "recovery_method": str,
     "self_identifying_deletion": bool, "reclamation_trigger": str,
     "window_class": str, "measured": list, "evidence": list, "confidence": str,
+    "replication": str,
 }
 WINDOW_CLASSES = {"unbounded", "auto-timed", "auto-untimed", "manual-only", "none"}
 CONFIDENCES = {"high", "medium", "low", "unverified"}

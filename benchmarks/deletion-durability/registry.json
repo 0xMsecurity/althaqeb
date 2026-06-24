@@ -40,6 +40,7 @@
         "experiments/residue/results/cross_version_chroma_summary.json"
       ],
       "confidence": "high",
+      "replication": "multi-seed (phase2 ×5 seeds) + cross-version (0.5.23→1.5.9) + 4 reclaim attacks (phase13) + idle timeline (phase16)",
       "notes": "Unique never-purges engine among all tested. Rust compaction internals not source-verified → 'no reclaim observed', not 'never'."
     },
     {
@@ -64,6 +65,7 @@
         "experiments/residue/results/phase15_milvus_gctimeline.json"
       ],
       "confidence": "high",
+      "replication": "single-seed, multi-condition (phase11 0.16% ratio, phase12 40% ratio, phase15 GC timeline)",
       "notes": "Small-ratio right-to-be-forgotten deletes do not trigger compaction → long persistence in practice."
     },
     {
@@ -86,6 +88,7 @@
         "experiments/residue/results/phase14_weaviate_cleanup.json"
       ],
       "confidence": "high",
+      "replication": "single-seed, 2 conditions (phase10 churn window, phase14 cleanup timeline)",
       "notes": "SELF-CORRECTION: earlier called durable on a too-short 20s window; phase14 shows it auto-purges. Belongs with the bounded engines, not Chroma."
     },
     {
@@ -106,6 +109,7 @@
         "experiments/residue/results/phase9_qdrant_server.json"
       ],
       "confidence": "high",
+      "replication": "single-run (n=1, phase9)",
       "notes": "Embedded Qdrant-local is a separate negative-control row (reclaims at close)."
     },
     {
@@ -126,6 +130,7 @@
         "experiments/residue/results/phase4_postgres.json"
       ],
       "confidence": "high",
+      "replication": "single-run (n=1, phase4)",
       "notes": "EVIDENCE GAP CLOSED 2026-06-24: phase4 re-run now emits structured per-checkpoint results (PG17, autovacuum off). Plain VACUUM does not reliably purge dead-tuple vector bytes; VACUUM FULL does."
     },
     {
@@ -146,6 +151,7 @@
         "experiments/residue/results/phase8_pgvector_hnsw.json"
       ],
       "confidence": "high",
+      "replication": "single-run (n=1, phase8)",
       "notes": "EVIDENCE GAP CLOSED 2026-06-24: phase8 re-run now emits results/phase8_pgvector_hnsw.json (PG18.4 + pgvector 0.8.3, autovacuum off so VACUUM is explicit). Routine (auto)vacuum self-cleans the index — unlike Chroma."
     },
     {
@@ -166,6 +172,7 @@
         "experiments/residue/results/phase3_cross_backend.json"
       ],
       "confidence": "high",
+      "replication": "single-run (n=1, phase3) — negative control",
       "notes": "Negative control — proves the method does not false-positive on a clean store."
     },
     {
@@ -186,6 +193,7 @@
         "experiments/residue/results/phase3_cross_backend.json"
       ],
       "confidence": "high",
+      "replication": "single-run (n=1, phase3) — negative control",
       "notes": "Negative control. NOT the Rust Qdrant server (separate row, which DOES leak a window)."
     }
   ]

@@ -43,6 +43,11 @@ The long-term ladder:
 
 ## PERMANENT BOARD
 
+The board is operationalized in detail by [`DOCTRINE.md`](DOCTRINE.md) — 14 departments
+(Reviewer #2 → Adversary → Scientist → Engineer → DFIR → Statistics → Product → CEO →
+Commercial → Authority → Reality) that never turn off. **Reality has veto over everyone.**
+Every major decision must survive all departments.
+
 Before every major action, convene the board:
 
 - **Founder** — Would I spend five years building this?
