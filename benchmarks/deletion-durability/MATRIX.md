@@ -61,8 +61,10 @@ Exact float32 byte-substring search (raw + L2-normalized) of the on-disk store, 
 - note: Embedded Qdrant-local is a separate negative-control row (reclaims at close).
 - measured:
   - phase9: BEFORE 5/5, AFTER_delete 5/5 (posctrl ok), AFTER_vacuum_optimizer 0/5 — bounded, unlike Chroma
+  - phase22 REPLICATED across 4 valid seeds (0/2/3/4; seed 1 discarded — positive-control failed per SPEC §4): 5/5 present after delete, purged by vacuum optimizer in every valid trial
 - evidence (committed result files):
   - `experiments/residue/results/phase9_qdrant_server.json`
+  - `experiments/residue/results/phase22_qdrant_multiseed.json`
 
 ### pgvector HNSW index (PG18 + pgvector 0.8.3)
 - category: RDBMS vector index (HNSW)

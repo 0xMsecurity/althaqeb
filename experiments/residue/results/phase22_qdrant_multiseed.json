@@ -1,0 +1,172 @@
+{
+  "trials": [
+    {
+      "seed": 0,
+      "before_delete_present": 5,
+      "after_delete_present": 5,
+      "before_posctrl": true,
+      "after_delete_posctrl": true,
+      "post_churn_timeline": [
+        {
+          "t_s": 0,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 8,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 16,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 30,
+          "poison_present": 0,
+          "posctrl": true
+        }
+      ],
+      "purged_at_s": 0
+    },
+    {
+      "seed": 1,
+      "before_delete_present": 5,
+      "after_delete_present": 5,
+      "before_posctrl": false,
+      "after_delete_posctrl": false,
+      "post_churn_timeline": [
+        {
+          "t_s": 0,
+          "poison_present": 0,
+          "posctrl": false
+        },
+        {
+          "t_s": 8,
+          "poison_present": 0,
+          "posctrl": false
+        },
+        {
+          "t_s": 16,
+          "poison_present": 0,
+          "posctrl": false
+        },
+        {
+          "t_s": 30,
+          "poison_present": 0,
+          "posctrl": false
+        }
+      ],
+      "purged_at_s": null
+    },
+    {
+      "seed": 2,
+      "before_delete_present": 5,
+      "after_delete_present": 5,
+      "before_posctrl": true,
+      "after_delete_posctrl": true,
+      "post_churn_timeline": [
+        {
+          "t_s": 0,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 8,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 16,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 30,
+          "poison_present": 0,
+          "posctrl": true
+        }
+      ],
+      "purged_at_s": 0
+    },
+    {
+      "seed": 3,
+      "before_delete_present": 5,
+      "after_delete_present": 5,
+      "before_posctrl": true,
+      "after_delete_posctrl": true,
+      "post_churn_timeline": [
+        {
+          "t_s": 0,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 8,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 16,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 30,
+          "poison_present": 0,
+          "posctrl": true
+        }
+      ],
+      "purged_at_s": 0
+    },
+    {
+      "seed": 4,
+      "before_delete_present": 5,
+      "after_delete_present": 5,
+      "before_posctrl": true,
+      "after_delete_posctrl": true,
+      "post_churn_timeline": [
+        {
+          "t_s": 0,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 8,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 16,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 30,
+          "poison_present": 0,
+          "posctrl": true
+        }
+      ],
+      "purged_at_s": 0
+    }
+  ],
+  "summary": {
+    "engine": "qdrant_server (Rust)",
+    "n_trials": 5,
+    "n_valid": 4,
+    "invalid_seeds_discarded (positive-control failed)": [
+      1
+    ],
+    "present_after_delete_all_valid": true,
+    "purged_after_optimizer_all_valid": true,
+    "purged_at_s_per_valid_seed": {
+      "0": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0
+    },
+    "class": "VEDC-AU (auto/untimed)",
+    "verdict": "REPLICATED across 4 valid seeds: 5/5 present after delete, purged by vacuum optimizer in every valid trial -> VEDC-AU Confirmed"
+  }
+}

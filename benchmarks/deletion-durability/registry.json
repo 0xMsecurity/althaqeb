@@ -105,13 +105,15 @@
       "window_seconds": null,
       "window_note": "present 5/5 after delete; vacuum optimizer purges to 0/5 when it fires",
       "measured": [
-        "phase9: BEFORE 5/5, AFTER_delete 5/5 (posctrl ok), AFTER_vacuum_optimizer 0/5 — bounded, unlike Chroma"
+        "phase9: BEFORE 5/5, AFTER_delete 5/5 (posctrl ok), AFTER_vacuum_optimizer 0/5 — bounded, unlike Chroma",
+        "phase22 REPLICATED across 4 valid seeds (0/2/3/4; seed 1 discarded — positive-control failed per SPEC §4): 5/5 present after delete, purged by vacuum optimizer in every valid trial"
       ],
       "evidence": [
-        "experiments/residue/results/phase9_qdrant_server.json"
+        "experiments/residue/results/phase9_qdrant_server.json",
+        "experiments/residue/results/phase22_qdrant_multiseed.json"
       ],
       "confidence": "high",
-      "replication": "single-run (n=1, phase9)",
+      "replication": "multi-seed (4 valid of 5, phase22 seeds 0/2/3/4; optimizer purges in all valid)",
       "notes": "Embedded Qdrant-local is a separate negative-control row (reclaims at close)."
     },
     {
