@@ -40,9 +40,17 @@ mres, _, _ = V.match_targets(DB, secret)
 rnd = np.random.default_rng(999).standard_normal((3,DIM)).astype(np.float32)
 mrnd, _, _ = V.match_targets(DB, rnd)
 ok_match = all(r["present"] for r in mres) and not any(r["present"] for r in mrnd)
+# streaming boundary: a tiny chunk forces vectors to straddle read boundaries; the overlap
+# carry in _stream_search must still find every one (regression guard for chunked matching).
+seg = next(iter(glob.glob(os.path.join(DB, "**", "data_level0.bin"), recursive=True)), None)
+ok_stream = True
+if seg is not None:
+    sniff = [(k, secret[k].astype(np.float32).tobytes()) for k in range(NDEL)]
+    ok_stream = V._stream_search(seg, sniff, chunk=37) == set(range(NDEL))
 shutil.rmtree(DB, ignore_errors=True)
 print(f"backend={backend} expected_deleted={NDEL} recovered={len(labels)} bit_identical_matched={matched} "
-      f"match_present={sum(r['present'] for r in mres)}/{NDEL} match_false_positives={sum(r['present'] for r in mrnd)}")
-if ok_backend and ok_count and ok_fidelity and ok_match:
+      f"match_present={sum(r['present'] for r in mres)}/{NDEL} match_false_positives={sum(r['present'] for r in mrnd)} "
+      f"stream_boundary={'ok' if ok_stream else 'FAIL'}")
+if ok_backend and ok_count and ok_fidelity and ok_match and ok_stream:
     print("SELFTEST PASS"); sys.exit(0)
 print("SELFTEST FAIL"); sys.exit(1)

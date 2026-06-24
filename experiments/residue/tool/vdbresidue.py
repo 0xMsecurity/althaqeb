@@ -210,19 +210,59 @@ def weaviate_detect(path):
            bool(glob.glob(os.path.join(path, "**", "*.wal"), recursive=True)) and "weaviate" in path.lower()
 
 # ----------------------------- exact-byte match (ALL engines, deterministic) -----------------------------
+def _stream_search(path, needles, chunk=1 << 24):
+    """Return the set of needle-indices (i) whose bytes appear anywhere in the file at `path`.
+    Streams the file in `chunk`-sized reads with an overlap of (maxlen-1) bytes carried between
+    reads, so a needle straddling a chunk boundary is still found. Memory is bounded by chunk +
+    overlap regardless of file size. `needles` is a list of (i, bytes)."""
+    if not needles:
+        return set()
+    found = set()
+    overlap = max(len(n) for _, n in needles) - 1
+    with open(path, "rb") as fh:
+        tail = b""
+        while True:
+            buf = fh.read(chunk)
+            if not buf:
+                break
+            window = tail + buf
+            for i, n in needles:
+                if i not in found and n in window:
+                    found.add(i)
+            if len(found) == len(needles):
+                break
+            tail = window[-overlap:] if overlap > 0 else b""
+    return found
+
 def match_targets(path, targets):
     """Report which target vectors (float32 rows) are physically present on disk, by exact
     byte substring (raw AND L2-normalized — engines using cosine store normalized). Alignment-
-    independent, zero false positives. Works on any backend's raw files."""
+    independent, zero false positives. Works on any backend's raw files.
+
+    Each file is searched independently and streamed in bounded chunks: memory stays O(chunk),
+    not O(store size), so this runs on multi-GB production stores. Searching per file (rather than
+    over a concatenation of all files) also removes spurious matches that could straddle a
+    file boundary — a stored vector always lives within a single file."""
     files = [f for f in glob.glob(os.path.join(path, "**", "*"), recursive=True) if os.path.isfile(f)]
-    raw = b"".join(open(f, "rb").read() for f in files)
-    res = []
+    # Build the needle list: each target contributes its raw bytes and, if non-zero, its
+    # L2-normalized bytes (cosine engines store normalized). Both map back to the same index.
+    needles = []
     for i, t in enumerate(targets):
         t = t.astype(np.float32)
+        needles.append((i, t.tobytes()))
         n = np.linalg.norm(t)
-        present = (t.tobytes() in raw) or (n > 0 and (t/n).astype(np.float32).tobytes() in raw)
-        res.append({"index": i, "present": bool(present)})
-    return res, len(files), len(raw)
+        if n > 0:
+            nb = (t / n).astype(np.float32).tobytes()
+            if nb != needles[-1][1]:
+                needles.append((i, nb))
+    present, store_bytes = set(), 0
+    for f in files:
+        store_bytes += os.path.getsize(f)
+        remaining = [(i, n) for (i, n) in needles if i not in present]
+        if remaining:
+            present |= _stream_search(f, remaining)
+    res = [{"index": i, "present": (i in present)} for i in range(len(targets))]
+    return res, len(files), store_bytes
 
 BACKENDS = [("chroma", chroma_detect, chroma_recover),
             ("milvus", milvus_detect, milvus_recover)]

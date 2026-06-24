@@ -5,7 +5,7 @@
 > enough for a stranger to understand what was done, what is true, what is dead, and
 > how to resume. Read [`GRAVEYARD.md`](GRAVEYARD.md) before proposing any new direction.
 
-- **Last updated:** 2026-06-23
+- **Last updated:** 2026-06-24
 - **Mission:** discover durable truth about whether *deletion is erasure* in agent /
   vector-database memory, and turn surviving truth into durable forensic assets.
 - **Phase:** experiments **SATURATED**; in **implementation / hardening / packaging**.
@@ -75,8 +75,10 @@ Everything lives under [`experiments/residue/`](experiments/residue/).
   DFIR / GDPR-erasure forensic auditor. Subcommands: `inspect`, `recover`, `report`,
   `acquire`, `match`, `verify`. Blind recovery for Chroma (dual signal: DELETE_MARK
   bit + sqlite seq-id orphan, 0 false positives) and Milvus (parquet delta tombstones);
-  `match` mode does exact-byte presence for known vectors on *any* engine. Chain-of-custody
-  JSONL on every op. Exit code 2 = recoverable residue found (CI / erasure gate).
+  `match` mode does exact-byte presence for known vectors on *any* engine — streamed in
+  bounded chunks (O(chunk) memory, runs on multi-GB stores) and searched per-file (no
+  cross-file-boundary false positives). Chain-of-custody JSONL on every op. Exit code 2 =
+  recoverable residue found (CI / erasure gate).
 - **`tool/selftest.py`** — deterministic, ~5s, no downloads. Builds a tiny Chroma DB,
   deletes 7, asserts exact recovery. **PASS** (7/7, 0 false positives) as of 2026-06-23.
 - **`scripts/vecdb_residue_audit.py`** — the original Chroma erasure auditor.
