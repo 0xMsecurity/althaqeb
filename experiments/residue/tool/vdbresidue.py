@@ -29,7 +29,7 @@ Subcommands:
 
 Exit: 2 if recoverable deleted residue is found (CI/erasure gate), 0 if clean, 1 on error.
 """
-import sys, os, glob, json, struct, hashlib, shutil, time, argparse
+import sys, os, glob, json, struct, hashlib, shutil, time, argparse, mmap
 import numpy as np
 
 COC_LOG = "vdbresidue_coc.jsonl"   # chain-of-custody log (written in CWD or --out)
@@ -110,31 +110,39 @@ def chroma_scan(seg, persist=None):
     if not d:
         return {"segment": seg, "error": "cannot determine dim"}, []
     dim, stride, offd, cur = d
-    data = open(seg, "rb").read()
-    n = len(data)//stride
+    size = os.path.getsize(seg)
+    n = size // stride
     live = _chroma_live_seqids(persist, seg) if persist else None
-    elems = []
-    for i in range(n):
-        base = i*stride
-        label = struct.unpack_from("<Q", data, base+offd+dim*4)[0]
-        marked = bool(data[base+2] & DELETE_MARK)
-        orphan = (live is not None) and (label not in live)
-        elems.append((label, base, marked, orphan))
-    n_mark = sum(1 for e in elems if e[2])
-    n_orphan_only = sum(1 for e in elems if e[3] and not e[2])
-    # PRECEDENCE, not union. DELETE_MARK is precise; it is written once a compaction
-    # re-persists the segment, at which point hnswlib labels are reassigned and no longer
-    # equal sqlite seq_ids -> the orphan check would false-positive on live elements. So:
-    # if ANY mark present (compacted state) trust marks only; only in the ZERO-marks state
-    # (low-write, labels == seq_ids, verified phase17) fall back to the orphan signal.
-    if n_mark > 0:
-        chosen, signal = [e for e in elems if e[2]], "DELETE_MARK"
-    elif n_orphan_only > 0:
-        chosen, signal = [e for e in elems if e[3]], "sqlite_orphan(no-marks state)"
-    else:
-        chosen, signal = [], "none"
-    deleted = [(lab, np.frombuffer(data[base+offd:base+offd+dim*4], dtype=np.float32).copy(), signal)
-               for (lab, base, mk, orp) in chosen]
+    # mmap the segment read-only: bounded RSS regardless of segment size (production
+    # data_level0.bin can be many GB), with the same random-access element indexing.
+    elems, deleted = [], []
+    with open(seg, "rb") as fh:
+        mm = mmap.mmap(fh.fileno(), 0, access=mmap.ACCESS_READ) if size else None
+        try:
+            for i in range(n):
+                base = i*stride
+                label = struct.unpack_from("<Q", mm, base+offd+dim*4)[0]
+                marked = bool(mm[base+2] & DELETE_MARK)
+                orphan = (live is not None) and (label not in live)
+                elems.append((label, base, marked, orphan))
+            n_mark = sum(1 for e in elems if e[2])
+            n_orphan_only = sum(1 for e in elems if e[3] and not e[2])
+            # PRECEDENCE, not union. DELETE_MARK is precise; it is written once a compaction
+            # re-persists the segment, at which point hnswlib labels are reassigned and no longer
+            # equal sqlite seq_ids -> the orphan check would false-positive on live elements. So:
+            # if ANY mark present (compacted state) trust marks only; only in the ZERO-marks state
+            # (low-write, labels == seq_ids, verified phase17) fall back to the orphan signal.
+            if n_mark > 0:
+                chosen, signal = [e for e in elems if e[2]], "DELETE_MARK"
+            elif n_orphan_only > 0:
+                chosen, signal = [e for e in elems if e[3]], "sqlite_orphan(no-marks state)"
+            else:
+                chosen, signal = [], "none"
+            deleted = [(lab, np.frombuffer(mm[base+offd:base+offd+dim*4], dtype=np.float32).copy(), signal)
+                       for (lab, base, mk, orp) in chosen]
+        finally:
+            if mm is not None:
+                mm.close()
     info = {"segment": seg, "dim": dim, "stride": stride, "total_elements": n,
             "cur_count_header": cur, "live_seqids": (len(live) if live is not None else None),
             "n_delete_mark": n_mark, "n_sqlite_orphan_only": n_orphan_only,
@@ -178,17 +186,19 @@ def milvus_recover(path):
             df = pq.read_table(s).to_pandas()
         except Exception as e:
             infos.append({"segment": s, "error": str(e)}); continue
-        veccol = next((c for c in df.columns if df[c].dtype == object and
+        veccol = next((c for c in df.columns if len(df) and df[c].dtype == object and
                        hasattr(df[c].iloc[0], "__len__") and not isinstance(df[c].iloc[0], str)), None)
         idcol = next((c for c in df.columns if c.lower() == "id"), None)
         info = {"segment": os.path.relpath(s, path), "rows": len(df),
                 "vector_col": veccol, "deleted_in_segment": 0}
         if veccol and idcol is not None:
+            ndel = 0
             for _, row in df.iterrows():
                 if int(row[idcol]) in deleted_ids:
                     vecs.append(np.array(row[veccol], dtype=np.float32))
                     labels.append({"segment": info["segment"], "id": int(row[idcol])})
-            info["deleted_in_segment"] = sum(1 for _, r in df.iterrows() if int(r[idcol]) in deleted_ids)
+                    ndel += 1
+            info["deleted_in_segment"] = ndel
         infos.append(info)
     return infos, (np.stack(vecs) if vecs else np.zeros((0,), np.float32)), labels
 
