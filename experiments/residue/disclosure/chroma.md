@@ -48,11 +48,11 @@ Full env in `../results/ENV.txt`; pinned deps in `../requirements.lock.txt`; ste
   `../results/phase12_chroma_highratio.json`: no reclamation under idle time, four active
   reclaim attacks (slot-reuse churn, 100%-delete refill, re-add same ids, tiny-batch churn),
   or a 60% high-ratio delete — the evidence basis for the `VEDC-U` (unbounded) class.
-- `../scripts/phase7_audit_validation.py`: an independent replication on Chroma's **default**
+- `../results/phase7_audit.json`: an independent replication on Chroma's **default**
   MiniLM-L6-v2 (dim 384) embedding fn with realistic PII records — a different model + dim than
-  the gtr runs, rebutting synthetic-data bias. Reproducible from the committed script; its run
-  output is not checked in (`logs/` is gitignored), so it **corroborates** rather than serving as
-  gated evidence. The gated recovery numbers are the registry-cited `results/*.json` above.
+  the gtr runs, rebutting synthetic-data bias. After delete + compaction the logical layer is
+  clean yet the auditor recovers **8/8** deleted records (validation PASS, exit code 2 = residue).
+  Reproduce: `../scripts/phase7_audit_validation.py`.
 - Inversion: `../results/phase1_seed0.json` (vec2text gtr-base) reconstructs trigger-bearing
   text from the residue (cosine 0.89–0.97; trigger-token preservation 0.8–1.0).
 

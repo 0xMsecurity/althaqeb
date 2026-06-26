@@ -9,12 +9,12 @@
     "auto-timed": "an automatic background pass purges it; a purge time was measured",
     "auto-untimed": "an automatic pass (optimizer/autovacuum) purges it, but no purge time was measured here",
     "manual-only": "only an explicit operator command purges it",
-    "none": "no residue — engine reclaims at write/close (true negative)"
+    "none": "no residue \u2014 engine reclaims at write/close (true negative)"
   },
   "engines": [
     {
       "engine": "ChromaDB",
-      "version": "1.5.9 (architectural across 0.5.23 → 1.5.9)",
+      "version": "1.5.9 (architectural across 0.5.23 \u2192 1.5.9)",
       "category": "embedded vector DB (bundled hnswlib HNSW segment)",
       "residue_after_delete": true,
       "recovery_method": "DELETE_MARK blind byte-parse of data_level0.bin (no schema/IDs)",
@@ -25,11 +25,12 @@
       "window_note": "survived 50k writes, restarts, delete_collection (drop), 360s idle, and 4 reclaim attacks",
       "measured": [
         "phase6: DELETE_MARK selects exactly the deleted elements [0,1,2,3,4] of 3005, cosine 1.0, all poison covered",
-        "phase16: idle 360s with client open → not purged (purged_at_s = null)",
-        "phase12: 60% delete ratio (600/1005) → 5/5 poison still present, 600 delete-marked",
-        "phase13: 4 reclaim attacks (slot reuse, 100% refill x3, re-add, churn) → no reclaim, residue 100% present",
+        "phase16: idle 360s with client open \u2192 not purged (purged_at_s = null)",
+        "phase12: 60% delete ratio (600/1005) \u2192 5/5 poison still present, 600 delete-marked",
+        "phase13: 4 reclaim attacks (slot reuse, 100% refill x3, re-add, churn) \u2192 no reclaim, residue 100% present",
         "phase2_seed0: residue survives delete_collection (residue_after_drop 5/5)",
-        "cross_version: ARCHITECTURAL — residue + DELETE_MARK unchanged 0.5.23 → 1.5.9 incl. post-1.0 Rust rewrite"
+        "cross_version: ARCHITECTURAL \u2014 residue + DELETE_MARK unchanged 0.5.23 \u2192 1.5.9 incl. post-1.0 Rust rewrite",
+        "phase7: independent replication on Chroma default MiniLM-L6-v2 (dim 384, 2nd model), 8/8 deleted PII records recovered after compaction, auditor PASS (rebuts synthetic-data bias)"
       ],
       "evidence": [
         "experiments/residue/results/phase6_blind_deletemark.json",
@@ -37,11 +38,12 @@
         "experiments/residue/results/phase12_chroma_highratio.json",
         "experiments/residue/results/phase13_chroma_reclaim_attack.json",
         "experiments/residue/results/phase2_seed0.json",
-        "experiments/residue/results/cross_version_chroma_summary.json"
+        "experiments/residue/results/cross_version_chroma_summary.json",
+        "experiments/residue/results/phase7_audit.json"
       ],
       "confidence": "high",
-      "replication": "multi-seed (phase2 ×5 seeds) + cross-version (0.5.23→1.5.9) + 4 reclaim attacks (phase13) + idle timeline (phase16)",
-      "notes": "Unique never-purges engine among all tested. Rust compaction internals not source-verified → 'no reclaim observed', not 'never'."
+      "replication": "multi-seed (phase2 \u00d75 seeds) + cross-version (0.5.23\u21921.5.9) + 4 reclaim attacks (phase13) + idle timeline (phase16)",
+      "notes": "Unique never-purges engine among all tested. Rust compaction internals not source-verified \u2192 'no reclaim observed', not 'never'."
     },
     {
       "engine": "Milvus (standalone)",
@@ -55,9 +57,9 @@
       "window_seconds": 360,
       "window_note": "DURABLE at realistic small delete ratios (compaction threshold not met); ~360s purge only after a high-ratio (40%) compaction completes",
       "measured": [
-        "phase11: 0.16% delete ratio → 5/5 persist through delete+flush+compact+GC (threshold not met, no segment rewrite)",
-        "phase12: 40% delete → compaction COMPLETED but 5/5 still recoverable after 80s GC wait (refutes 'high-ratio always purges')",
-        "phase15: 40% delete, gc_interval 30s → purged_at_s = 360"
+        "phase11: 0.16% delete ratio \u2192 5/5 persist through delete+flush+compact+GC (threshold not met, no segment rewrite)",
+        "phase12: 40% delete \u2192 compaction COMPLETED but 5/5 still recoverable after 80s GC wait (refutes 'high-ratio always purges')",
+        "phase15: 40% delete, gc_interval 30s \u2192 purged_at_s = 360"
       ],
       "evidence": [
         "experiments/residue/results/phase11_milvus_standalone.json",
@@ -66,7 +68,7 @@
       ],
       "confidence": "high",
       "replication": "single-seed, multi-condition (phase11 0.16% ratio, phase12 40% ratio, phase15 GC timeline)",
-      "notes": "Small-ratio right-to-be-forgotten deletes do not trigger compaction → long persistence in practice."
+      "notes": "Small-ratio right-to-be-forgotten deletes do not trigger compaction \u2192 long persistence in practice."
     },
     {
       "engine": "Weaviate",
@@ -80,9 +82,9 @@
       "window_seconds": 70,
       "window_note": "purged at ~70s with cleanupIntervalSeconds=5; production default interval is 300s",
       "measured": [
-        "phase10: 5/5 present after delete; persisted ≥ tested churn window",
-        "phase14: cleanupIntervalSeconds=5 → purged_at_s = 70",
-        "phase19: REPLICATED across 3 seeds — 5/5 present through 45s, purged 0/5 at 70s in every trial (purge 70s min=max=mean), positive control held all trials"
+        "phase10: 5/5 present after delete; persisted \u2265 tested churn window",
+        "phase14: cleanupIntervalSeconds=5 \u2192 purged_at_s = 70",
+        "phase19: REPLICATED across 3 seeds \u2014 5/5 present through 45s, purged 0/5 at 70s in every trial (purge 70s min=max=mean), positive control held all trials"
       ],
       "evidence": [
         "experiments/residue/results/phase10_weaviate.json",
@@ -90,7 +92,7 @@
         "experiments/residue/results/phase19_weaviate_multiseed.json"
       ],
       "confidence": "high",
-      "replication": "multi-seed (×3, phase19 seeds 0/1/2; purge 70s all trials) + 2 conditions (phase10 churn, phase14 timeline)",
+      "replication": "multi-seed (\u00d73, phase19 seeds 0/1/2; purge 70s all trials) + 2 conditions (phase10 churn, phase14 timeline)",
       "notes": "SELF-CORRECTION: earlier called durable on a too-short 20s window; phase14 shows it auto-purges. Belongs with the bounded engines, not Chroma."
     },
     {
@@ -105,12 +107,14 @@
       "window_seconds": null,
       "window_note": "present 5/5 after delete; vacuum optimizer purges to 0/5 when it fires",
       "measured": [
-        "phase9: BEFORE 5/5, AFTER_delete 5/5 (posctrl ok), AFTER_vacuum_optimizer 0/5 — bounded, unlike Chroma",
-        "phase22 REPLICATED across 4 valid seeds (0/2/3/4; seed 1 discarded — positive-control failed per SPEC §4): 5/5 present after delete, purged by vacuum optimizer in every valid trial"
+        "phase9: BEFORE 5/5, AFTER_delete 5/5 (posctrl ok), AFTER_vacuum_optimizer 0/5 \u2014 bounded, unlike Chroma",
+        "phase22 REPLICATED across 4 valid seeds (0/2/3/4; seed 1 discarded \u2014 positive-control failed per SPEC \u00a74): 5/5 present after delete, purged by vacuum optimizer in every valid trial",
+        "phase26: digest-pinned re-run (qdrant 1.18.2 @ sha256:75eab8c4\u2026), 2 valid seeds, 5/5 present after delete \u2192 purged by optimizer (provenance for the tested version)"
       ],
       "evidence": [
         "experiments/residue/results/phase9_qdrant_server.json",
-        "experiments/residue/results/phase22_qdrant_multiseed.json"
+        "experiments/residue/results/phase22_qdrant_multiseed.json",
+        "experiments/residue/results/phase26_qdrant_pinned.json"
       ],
       "confidence": "high",
       "replication": "multi-seed (4 valid of 5, phase22 seeds 0/2/3/4; optimizer purges in all valid)",
@@ -129,7 +133,7 @@
       "window_note": "5/5 after delete; survives plain VACUUM (4/5 bytes remain); only VACUUM FULL purges (0/5)",
       "measured": [
         "phase4: BEFORE/AFTER delete 5/5 present in heap+TOAST (posctrl ok); AFTER plain VACUUM 4/5 still present; AFTER VACUUM FULL 0/5 (table rewrite), posctrl filler present throughout",
-        "phase4 REPLICATED across seeds 0/1/2: identical pattern — 5/5 after delete → 4/5 after plain VACUUM → 0/5 only after VACUUM FULL, in every seed"
+        "phase4 REPLICATED across seeds 0/1/2: identical pattern \u2014 5/5 after delete \u2192 4/5 after plain VACUUM \u2192 0/5 only after VACUUM FULL, in every seed"
       ],
       "evidence": [
         "experiments/residue/results/phase4_postgres.json",
@@ -137,7 +141,7 @@
         "experiments/residue/results/phase4_postgres_seed2.json"
       ],
       "confidence": "high",
-      "replication": "multi-seed (×3, phase4 seeds 0/1/2; survives plain VACUUM, VACUUM FULL purges)",
+      "replication": "multi-seed (\u00d73, phase4 seeds 0/1/2; survives plain VACUUM, VACUUM FULL purges)",
       "notes": "EVIDENCE GAP CLOSED 2026-06-24: phase4 re-run now emits structured per-checkpoint results (PG17, autovacuum off). Plain VACUUM does not reliably purge dead-tuple vector bytes; VACUUM FULL does."
     },
     {
@@ -150,10 +154,10 @@
       "reclamation_trigger": "plain VACUUM",
       "window_class": "auto-untimed",
       "window_seconds": null,
-      "window_note": "present 5/5 after delete (cos 1.0); plain VACUUM purges to 0/5 (cos → ~0.13). Least leaky of the DBs.",
+      "window_note": "present 5/5 after delete (cos 1.0); plain VACUUM purges to 0/5 (cos \u2192 ~0.13). Least leaky of the DBs.",
       "measured": [
         "phase8: BEFORE/AFTER delete 5/5 in HNSW index (cos 1.0, posctrl 1.0); AFTER plain VACUUM 0/5 (cos ~0.13, posctrl still 1.0); VACUUM FULL + REINDEX also 0/5",
-        "phase8 REPLICATED across seeds 0/1/2: identical class — 5/5 after delete → 0/5 after plain VACUUM in every seed, posctrl 1.0 throughout"
+        "phase8 REPLICATED across seeds 0/1/2: identical class \u2014 5/5 after delete \u2192 0/5 after plain VACUUM in every seed, posctrl 1.0 throughout"
       ],
       "evidence": [
         "experiments/residue/results/phase8_pgvector_hnsw.json",
@@ -161,8 +165,8 @@
         "experiments/residue/results/phase8_pgvector_hnsw_seed2.json"
       ],
       "confidence": "high",
-      "replication": "multi-seed (×3, phase8 seeds 0/1/2; plain VACUUM purges in all)",
-      "notes": "EVIDENCE GAP CLOSED 2026-06-24: phase8 re-run now emits results/phase8_pgvector_hnsw.json (PG18.4 + pgvector 0.8.3, autovacuum off so VACUUM is explicit). Routine (auto)vacuum self-cleans the index — unlike Chroma."
+      "replication": "multi-seed (\u00d73, phase8 seeds 0/1/2; plain VACUUM purges in all)",
+      "notes": "EVIDENCE GAP CLOSED 2026-06-24: phase8 re-run now emits results/phase8_pgvector_hnsw.json (PG18.4 + pgvector 0.8.3, autovacuum off so VACUUM is explicit). Routine (auto)vacuum self-cleans the index \u2014 unlike Chroma."
     },
     {
       "engine": "FAISS (flat, remove_ids)",
@@ -182,8 +186,8 @@
         "experiments/residue/results/phase3_cross_backend.json"
       ],
       "confidence": "high",
-      "replication": "single-run (n=1, phase3) — negative control",
-      "notes": "Negative control — proves the method does not false-positive on a clean store. VEDC-N is float32-scoped (SPEC §9): not tested against quantized storage."
+      "replication": "single-run (n=1, phase3) \u2014 negative control",
+      "notes": "Negative control \u2014 proves the method does not false-positive on a clean store. VEDC-N is float32-scoped (SPEC \u00a79): not tested against quantized storage."
     },
     {
       "engine": "Qdrant (local/embedded)",
@@ -203,29 +207,29 @@
         "experiments/residue/results/phase3_cross_backend.json"
       ],
       "confidence": "high",
-      "replication": "single-run (n=1, phase3) — negative control",
-      "notes": "Negative control. NOT the Rust Qdrant server (separate row, which DOES leak a window). VEDC-N is float32-scoped (SPEC §9): not tested against quantized storage."
+      "replication": "single-run (n=1, phase3) \u2014 negative control",
+      "notes": "Negative control. NOT the Rust Qdrant server (separate row, which DOES leak a window). VEDC-N is float32-scoped (SPEC \u00a79): not tested against quantized storage."
     },
     {
       "engine": "sqlite-vec",
       "version": "0.1.9 (SQLite vec0 virtual table)",
       "category": "embedded vector index inside SQLite",
       "residue_after_delete": false,
-      "recovery_method": "n/a — vec0 rewrites/compacts its vector chunk on delete",
+      "recovery_method": "n/a \u2014 vec0 rewrites/compacts its vector chunk on delete",
       "self_identifying_deletion": false,
       "reclamation_trigger": "vec0 chunk rewrite at delete (commit)",
       "window_class": "none",
       "window_seconds": null,
       "window_note": "5/5 present before delete (via SQLite page-aware detector), 0/5 after a committed delete (positive control still found), 0/5 after VACUUM",
       "measured": [
-        "phase24: SQLite-page-aware (overflow-de-interrupted) detector recovers 5/5 before delete where raw byte-search saw only 2/5; AFTER committed delete 0/5 (posctrl held), AFTER VACUUM 0/5 — replicated across seeds 0/1/2"
+        "phase24: SQLite-page-aware (overflow-de-interrupted) detector recovers 5/5 before delete where raw byte-search saw only 2/5; AFTER committed delete 0/5 (posctrl held), AFTER VACUUM 0/5 \u2014 replicated across seeds 0/1/2"
       ],
       "evidence": [
         "experiments/residue/results/phase24_sqlite_detector.json"
       ],
       "confidence": "high",
-      "replication": "multi-seed (×3, phase24 seeds 0/1/2)",
-      "notes": "REAL engine that erases on delete — NOT a synthetic negative control like FAISS. Required a SQLite-page-aware detector (overflow-page de-interruption, now in vdbresidue match mode; SPEC §9) because raw byte-search under-counts when SQLite splits a vector across overflow pages. First production engine measured with no recoverable post-delete residue (good privacy default)."
+      "replication": "multi-seed (\u00d73, phase24 seeds 0/1/2)",
+      "notes": "REAL engine that erases on delete \u2014 NOT a synthetic negative control like FAISS. Required a SQLite-page-aware detector (overflow-page de-interruption, now in vdbresidue match mode; SPEC \u00a79) because raw byte-search under-counts when SQLite splits a vector across overflow pages. First production engine measured with no recoverable post-delete residue (good privacy default)."
     },
     {
       "engine": "LanceDB",
@@ -239,14 +243,14 @@
       "window_seconds": null,
       "window_note": "soft delete leaves residue; a routine optimize at low (right-to-erasure) delete ratios does NOT purge it (threshold not met, like Milvus small-ratio); only high-ratio compaction materializes + purges",
       "measured": [
-        "phase25 (×3 seeds): BEFORE 5/5; AFTER soft delete (1% ratio) 5/5; AFTER optimize at low ratio 5/5 (NOT materialized); AFTER optimize at high ratio (~40%) 0/5; positive control (live id) held throughout"
+        "phase25 (\u00d73 seeds): BEFORE 5/5; AFTER soft delete (1% ratio) 5/5; AFTER optimize at low ratio 5/5 (NOT materialized); AFTER optimize at high ratio (~40%) 0/5; positive control (live id) held throughout"
       ],
       "evidence": [
         "experiments/residue/results/phase25_lancedb.json"
       ],
       "confidence": "high",
-      "replication": "multi-seed (×3, phase25 seeds 0/1/2)",
-      "notes": "Real production vector DB. Same class as Postgres-heap (VEDC-M+S) but a different mechanism: manual compaction with a deletion-materialization threshold, not VACUUM FULL. Privacy-relevant: small-ratio right-to-be-forgotten deletes persist even through a routine optimize — mirrors the Milvus small-ratio finding."
+      "replication": "multi-seed (\u00d73, phase25 seeds 0/1/2)",
+      "notes": "Real production vector DB. Same class as Postgres-heap (VEDC-M+S) but a different mechanism: manual compaction with a deletion-materialization threshold, not VACUUM FULL. Privacy-relevant: small-ratio right-to-be-forgotten deletes persist even through a routine optimize \u2014 mirrors the Milvus small-ratio finding."
     }
   ]
 }

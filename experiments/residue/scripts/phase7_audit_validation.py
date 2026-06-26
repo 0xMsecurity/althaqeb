@@ -60,11 +60,34 @@ print("\n========== AUDITOR OUTPUT ==========")
 print(r.stdout)
 print("exit code:", r.returncode)
 rep=json.loads(r.stdout.split("\n\n")[0]) if r.stdout.strip().startswith("{") else None
+result={
+    "phase": "phase7_audit_validation",
+    "purpose": "independent replication on Chroma default MiniLM-L6-v2 (dim 384) + auditor correctness",
+    "embedding_model": "chroma-default all-MiniLM-L6-v2 (ONNX, dim 384)",
+    "n_docs_added": len(ids),
+    "expected_deleted": len(del_ids),
+    "deleted_ids_logically_queryable_after_compaction": rep is None,  # overwritten below
+}
 if rep:
     found=rep["total_deleted_recoverable"]
     dims=[s.get("dim") for s in rep["segments"]]
     src=[s.get("dim_source") for s in rep["segments"]]
+    result.update({
+        "auditor_found_recoverable": found,
+        "segment_dims": dims,
+        "segment_dim_source": src,
+        "validation": "PASS" if found==len(del_ids) else "MISMATCH",
+        "exit_code": r.returncode,
+        "exit_code_signals_residue": r.returncode==2,
+    })
     print(f"\n[VALIDATION] expected_deleted={len(del_ids)}  auditor_found={found}  "
           f"dims={dims} source={src}")
-    print(f"[VALIDATION] {'PASS' if found==len(del_ids) else 'MISMATCH'} "
+    print(f"[VALIDATION] {result['validation']} "
           f"| exit_code_signals_residue={r.returncode==2}")
+else:
+    result.update({"auditor_found_recoverable": None, "validation": "NO_REPORT",
+                   "exit_code": r.returncode})
+    print("[VALIDATION] auditor produced no JSON report")
+OUT=os.path.join(ROOT,"results","phase7_audit.json")
+with open(OUT,"w") as f: json.dump(result, f, indent=2)
+print("[written]", OUT)

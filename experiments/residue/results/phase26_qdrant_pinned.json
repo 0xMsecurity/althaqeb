@@ -1,0 +1,111 @@
+{
+  "provenance": {
+    "image_ref": "qdrant/qdrant@sha256:75eab8c4ba42096724fdcfde8b4de0b5713d529dde32f285a1f86fdcb2c9e50c",
+    "repo_digest": "qdrant/qdrant@sha256:75eab8c4ba42096724fdcfde8b4de0b5713d529dde32f285a1f86fdcb2c9e50c",
+    "version_string": "qdrant 1.18.2"
+  },
+  "trials": [
+    {
+      "seed": 0,
+      "before_delete_present": 5,
+      "after_delete_present": 5,
+      "before_posctrl": true,
+      "after_delete_posctrl": true,
+      "post_churn_timeline": [
+        {
+          "t_s": 0,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 8,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 16,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 30,
+          "poison_present": 0,
+          "posctrl": true
+        }
+      ],
+      "purged_at_s": 0
+    },
+    {
+      "seed": 1,
+      "before_delete_present": 5,
+      "after_delete_present": 5,
+      "before_posctrl": false,
+      "after_delete_posctrl": false,
+      "post_churn_timeline": [
+        {
+          "t_s": 0,
+          "poison_present": 0,
+          "posctrl": false
+        },
+        {
+          "t_s": 8,
+          "poison_present": 0,
+          "posctrl": false
+        },
+        {
+          "t_s": 16,
+          "poison_present": 0,
+          "posctrl": false
+        },
+        {
+          "t_s": 30,
+          "poison_present": 0,
+          "posctrl": false
+        }
+      ],
+      "purged_at_s": null
+    },
+    {
+      "seed": 2,
+      "before_delete_present": 5,
+      "after_delete_present": 5,
+      "before_posctrl": true,
+      "after_delete_posctrl": true,
+      "post_churn_timeline": [
+        {
+          "t_s": 0,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 8,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 16,
+          "poison_present": 0,
+          "posctrl": true
+        },
+        {
+          "t_s": 30,
+          "poison_present": 0,
+          "posctrl": true
+        }
+      ],
+      "purged_at_s": 0
+    }
+  ],
+  "summary": {
+    "engine": "qdrant_server (Rust), digest-pinned",
+    "n_trials": 3,
+    "n_valid": 2,
+    "invalid_seeds_discarded": [
+      1
+    ],
+    "present_after_delete_all_valid": true,
+    "purged_after_optimizer_all_valid": true,
+    "class_reproduced": "VEDC-AU",
+    "note": "Provenance-pinned confirmatory run; Confirmed status rests on phase22 (3 valid seeds)."
+  }
+}

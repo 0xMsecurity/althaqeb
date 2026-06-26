@@ -106,10 +106,14 @@ Everything lives under [`experiments/residue/`](experiments/residue/).
 - **Disclosure not sent.** Ethical + human decision; advisories are **READY** (staged) in
   `disclosure/` — a human verifies the channel against each project's current `SECURITY.md`,
   sends, and advances the tracker. The agent stops at READY.
-- **phase7 (2nd-model replication) is not a committed result.** Its run output goes to the
-  gitignored `logs/` (no `results/*.json`); the advisory cites the committed *script* as
-  reproducible corroboration, not as gated evidence. Optional follow-up: add a JSON dump and
-  commit it as registry-eligible evidence (deferred — corroborative, not core; manifest churn).
+- **phase7 (2nd-model replication) — RESOLVED 2026-06-26.** Now emits a committed
+  `results/phase7_audit.json` (8/8 deleted MiniLM-L6-v2 PII records recovered post-compaction,
+  auditor PASS); added to ChromaDB's gated registry evidence (strengthens VEDC-U+S vs the
+  "only-gtr" critique). Advisory upgraded to cite the committed result.
+- **Qdrant provenance — RESOLVED 2026-06-26.** phase9/phase22 ran `:latest` with no recorded
+  digest; `results/phase26_qdrant_pinned.json` pins **qdrant 1.18.2 @ sha256:75eab8c4…** and
+  reproduces present-after-delete → optimizer-purge (2 valid seeds). Added to Qdrant-server gated
+  evidence; Confirmed status still rests on phase22. Advisory cites the pinned digest.
 - **Formal publication** deliberately deferred until evidence stabilizes (it has;
   the gate is now "is the paper worth more than the tool?" — see open question below).
 - **Inversion on non-gtr models** untested (vec2text ships gtr + ada-002 only). Does

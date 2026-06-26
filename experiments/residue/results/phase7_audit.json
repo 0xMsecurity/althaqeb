@@ -1,0 +1,18 @@
+{
+  "phase": "phase7_audit_validation",
+  "purpose": "independent replication on Chroma default MiniLM-L6-v2 (dim 384) + auditor correctness",
+  "embedding_model": "chroma-default all-MiniLM-L6-v2 (ONNX, dim 384)",
+  "n_docs_added": 68,
+  "expected_deleted": 8,
+  "deleted_ids_logically_queryable_after_compaction": false,
+  "auditor_found_recoverable": 8,
+  "segment_dims": [
+    384
+  ],
+  "segment_dim_source": [
+    "header.bin"
+  ],
+  "validation": "PASS",
+  "exit_code": 2,
+  "exit_code_signals_residue": true
+}

@@ -10,15 +10,19 @@ Qdrant-server `VEDC-AU` (Confirmed), pgvector HNSW index `VEDC-AU` (Confirmed), 
 reclamation (the heap channel needs an explicit `VACUUM FULL`).
 
 ## Qdrant (server, Rust engine) — VEDC-AU, Confirmed
-- Container: `qdrant/qdrant:latest` (pulled at test time; exact version/digest not captured in
-  the run record — `:latest` tag). Qdrant is FYI-tier (it purges), so version precision is
-  non-critical; a sender should confirm against the current release.
+- **Version tested (digest-pinned): qdrant 1.18.2**, image
+  `qdrant/qdrant@sha256:75eab8c4ba42096724fdcfde8b4de0b5713d529dde32f285a1f86fdcb2c9e50c`
+  (`../results/phase26_qdrant_pinned.json`, run 2026-06-26). The earlier phase9/phase22 runs used
+  the `:latest` tag and did not record a digest; phase26 pins it. Qdrant is FYI-tier (it purges).
 - `../results/phase9_qdrant_server.json`: deleted vectors present after `delete` (5/5), then
   **0/5 after the vacuum optimizer triggered** (forced via aggressive `deleted_threshold`
   + churn). Live filler vectors retained throughout (positive control).
 - `../results/phase22_qdrant_multiseed.json`: multi-seed (×3) confirmation — the basis for the
   **Confirmed** `VEDC-AU` class. (One seed discarded for a positive-control failure per SPEC §4;
   the kept trials all show present-after-delete → purged.)
+- `../results/phase26_qdrant_pinned.json`: digest-pinned confirmatory re-run (2 valid seeds,
+  1 discarded for posctrl failure): 5/5 present after delete → purged by the optimizer. Provenance
+  evidence for the version above; Confirmed status rests on phase22.
 - Takeaway: residue exists only in the window before the optimizer runs. Worth a docs note
   that erasure completeness depends on optimizer settings/scheduling.
 - Repro: `../scripts/phase9_qdrant_server.py`, `../scripts/phase22_qdrant_multiseed.py`.

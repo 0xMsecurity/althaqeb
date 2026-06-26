@@ -6,8 +6,8 @@
 
 | Engine | VEDC class | Self-ID'd | Conformance | Evidence |
 |---|---|---|---|---|
-| **ChromaDB** | VEDC-U+S (Unbounded) | yes | Confirmed | `phase6_blind_deletemark.json`, `phase16_chroma_idle.json`, `phase12_chroma_highratio.json`, `phase13_chroma_reclaim_attack.json`, `phase2_seed0.json`, `cross_version_chroma_summary.json` |
-| **Qdrant (server)** | VEDC-AU (Auto / untimed) | — | Confirmed | `phase9_qdrant_server.json`, `phase22_qdrant_multiseed.json` |
+| **ChromaDB** | VEDC-U+S (Unbounded) | yes | Confirmed | `phase6_blind_deletemark.json`, `phase16_chroma_idle.json`, `phase12_chroma_highratio.json`, `phase13_chroma_reclaim_attack.json`, `phase2_seed0.json`, `cross_version_chroma_summary.json`, `phase7_audit.json` |
+| **Qdrant (server)** | VEDC-AU (Auto / untimed) | — | Confirmed | `phase9_qdrant_server.json`, `phase22_qdrant_multiseed.json`, `phase26_qdrant_pinned.json` |
 | **pgvector HNSW index** | VEDC-AU (Auto / untimed) | — | Confirmed | `phase8_pgvector_hnsw.json`, `phase8_pgvector_hnsw_seed1.json`, `phase8_pgvector_hnsw_seed2.json` |
 | **Postgres heap (pgvector as bytea/TOAST)** | VEDC-M+S (Manual-only) | yes | Confirmed | `phase4_postgres.json`, `phase4_postgres_seed1.json`, `phase4_postgres_seed2.json` |
 | **LanceDB** | VEDC-M+S (Manual-only) | yes | Confirmed | `phase25_lancedb.json` |

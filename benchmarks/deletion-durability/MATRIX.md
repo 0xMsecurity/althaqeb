@@ -48,6 +48,7 @@ Exact float32 byte-substring search (raw + L2-normalized) of the on-disk store, 
   - phase13: 4 reclaim attacks (slot reuse, 100% refill x3, re-add, churn) → no reclaim, residue 100% present
   - phase2_seed0: residue survives delete_collection (residue_after_drop 5/5)
   - cross_version: ARCHITECTURAL — residue + DELETE_MARK unchanged 0.5.23 → 1.5.9 incl. post-1.0 Rust rewrite
+  - phase7: independent replication on Chroma default MiniLM-L6-v2 (dim 384, 2nd model), 8/8 deleted PII records recovered after compaction, auditor PASS (rebuts synthetic-data bias)
 - evidence (committed result files):
   - `experiments/residue/results/phase6_blind_deletemark.json`
   - `experiments/residue/results/phase16_chroma_idle.json`
@@ -55,6 +56,7 @@ Exact float32 byte-substring search (raw + L2-normalized) of the on-disk store, 
   - `experiments/residue/results/phase13_chroma_reclaim_attack.json`
   - `experiments/residue/results/phase2_seed0.json`
   - `experiments/residue/results/cross_version_chroma_summary.json`
+  - `experiments/residue/results/phase7_audit.json`
 
 ### Qdrant (server) (qdrant/qdrant container (Rust engine))
 - category: vector DB (Rust, mmap segments)
@@ -64,9 +66,11 @@ Exact float32 byte-substring search (raw + L2-normalized) of the on-disk store, 
 - measured:
   - phase9: BEFORE 5/5, AFTER_delete 5/5 (posctrl ok), AFTER_vacuum_optimizer 0/5 — bounded, unlike Chroma
   - phase22 REPLICATED across 4 valid seeds (0/2/3/4; seed 1 discarded — positive-control failed per SPEC §4): 5/5 present after delete, purged by vacuum optimizer in every valid trial
+  - phase26: digest-pinned re-run (qdrant 1.18.2 @ sha256:75eab8c4…), 2 valid seeds, 5/5 present after delete → purged by optimizer (provenance for the tested version)
 - evidence (committed result files):
   - `experiments/residue/results/phase9_qdrant_server.json`
   - `experiments/residue/results/phase22_qdrant_multiseed.json`
+  - `experiments/residue/results/phase26_qdrant_pinned.json`
 
 ### pgvector HNSW index (PG18 + pgvector 0.8.3)
 - category: RDBMS vector index (HNSW)
