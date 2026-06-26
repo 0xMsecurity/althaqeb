@@ -103,15 +103,57 @@ byte-level proof (byte-exact detection + blind parse).
 
 ## 7. Relation to prior work (Academic requirement — exact delta)
 
-The underlying phenomenon — that logically deleted database records persist physically until a
-reclamation pass — is **well established and NOT claimed as novel here**: Stahlberg et al.,
-*Threats to Privacy in the Forensic Analysis of Database Systems* (SIGMOD 2007); the secure-
-deletion literature (e.g. Reardon et al., *SoK: Secure Data Deletion*, IEEE S&P 2013); and GDPR
-Art. 17. We are not aware of a prior **cross-engine, evidence-traceable classification of
-deletion durability specifically for vector stores**, nor of the specific finding that the
-residue is (a) an *embedding vector invertible back to text* and (b) **unbounded on ChromaDB**
-while bounded on every other engine measured. Those are the contributions; the persistence
-phenomenon itself is prior art. No "first" is claimed beyond this delta.
+This section is written to survive a hostile reviewer. We claim **no novelty for the principle**
+that "deletion is not erasure" or that it should be verified — that principle is decades old. The
+contribution is a **method, measurement, and classification for AI vector/RAG memory**, a layer no
+prior body covers. Each adjacent claim-of-priorart and why it does not subsume this:
+
+**Prior art we explicitly concede (the principle + the database/media cases):**
+- **Deleted records persist physically** — Stahlberg et al., *Threats to Privacy in the Forensic
+  Analysis of Database Systems* (SIGMOD 2007); secure-deletion SoK — Reardon et al., *SoK: Secure
+  Data Deletion* (IEEE S&P 2013). These establish persistence in B-trees/heaps/filesystems, **not**
+  in ANN indexes / HNSW graphs / quantization codebooks.
+- **"Deletion ≠ secure erasure; verify unrecoverability"** is the settled doctrine of media
+  sanitization: **NIST SP 800-88 Rev. 2** (final, 2025-09-26) and **IEEE 2883-2022**. Both operate
+  at the **media / storage-device** layer; 800-88 explicitly scopes technology-specific (above-media)
+  sanitization **out**, and does not address embeddings or ML data structures. The *principle* is
+  theirs; the *AI-memory method* is not in them.
+- **GDPR Art. 17** imposes the erasure **obligation** but prescribes **no method and no proof
+  standard** ("reasonable steps, including technical measures"). The EU regulator's own 2025
+  Coordinated Enforcement review found controllers cannot reliably *demonstrate* erasure.
+- **ISO/IEC 27001:2022 A.8.10** requires deletion methods that render data *unrecoverable* with
+  "verification processes" — but is **media-agnostic** and defines no vector-store method.
+
+**Adjacent work that is often miscited as "already covers this," and the exact gap:**
+- **MITRE ATLAS** — has techniques for *exposing/inverting live* model data (`AML.T0057` LLM Data
+  Leakage; `AML.T0024.001` Invert ML Model) but **no technique for post-deletion residue / data
+  remanence** in the store. Our residue is the *precondition* that makes inversion exploitable
+  *after* a delete.
+- **NIST AI RMF / 600-1 GenAI Profile** — names retention, decommissioning, and provenance-tracking
+  of deletions, but contains **no erasure-verification control** (`erasure`/`RTBF`/`disposal` do not
+  appear as controls).
+- **OWASP AISVS C8.3** (the closest AI-specific control) — verifies *exclusion from retrieval* and
+  that "memory can be reset" — i.e. the **logical/query layer**, exactly the failure mode where the
+  vector still resides physically in the HNSW segment. It does not test physical unrecoverability.
+- **Machine-unlearning verification** (Athena PoPETs'22; surveys 2024–25) — verifies whether the
+  trained **model** forgot (membership-inference / influence), and is itself shown **forgeable**
+  (*Verification of Machine Unlearning is Fragile*, 2024). It is silent on whether the **raw
+  embedding is still recoverable on disk** — an orthogonal, storage-side property that is *not*
+  forgeable because it is measured directly against the store.
+
+**The exact delta (what is ours):** a normative, evidence-traceable **method and classification for
+erasure durability in vector/RAG stores** — specifically that the residue is (a) recoverable by a
+**blind byte-parse of the ANN segment with no schema/IDs**, (b) **self-identifying** because the
+engine's own deletion metadata (hnswlib `DELETE_MARK`, Milvus delta tombstone, Postgres `xmax`)
+selects exactly the erased records, (c) an **embedding vector invertible back to source text**
+(making "opaque floats" recoverable PII), (d) **unbounded on ChromaDB** while bounded on every other
+of 10 engines measured, and (e) reduced to an executable **cross-engine VEDC classification** with a
+mandatory positive control and Confirmed/Provisional evidence levels. No "first" is claimed beyond
+this delta; the persistence phenomenon and the verify-erasure principle are prior art.
+
+> Primary-source citations for every body named here are maintained in
+> [`../../POSITIONING.md`](../../POSITIONING.md) §3 and the crosswalk in
+> [`INTEGRATION.md`](INTEGRATION.md) (single source of truth for the URLs, to avoid drift).
 
 ## 8. Ethics & disclosure (Ethics requirement)
 
