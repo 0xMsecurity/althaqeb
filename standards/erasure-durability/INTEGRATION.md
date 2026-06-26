@@ -54,7 +54,10 @@
 - **What VEDC supplies & the move:** a proposed **C8.3.4** — *"Verify that a deleted embedding is
   physically unrecoverable from the store (no HNSW/heap residue; not invertible to source text),
   per its VEDC class."* This is a natural upstream PR and the single highest-EV authority-conferring
-  integration (community-owned, fast, no accreditation ecosystem required).
+  integration (community-owned, fast, no accreditation ecosystem required). **The full requirement
+  text, rationale, and exact diff are staged** in [`contrib/owasp-aisvs-c8.3.4.md`](contrib/owasp-aisvs-c8.3.4.md)
+  — ready for a human to open the PR (opening it is a gate; do it after the preprint has an arXiv ID
+  so the PR cites a stable reference).
 
 ## Secondary mappings
 
