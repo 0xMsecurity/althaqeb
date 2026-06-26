@@ -207,21 +207,37 @@ with no recoverable post-delete residue. SPEC §9 limitation is now ADDRESSED; s
   (their no-false-positive role is already demonstrated by every positive engine's positive
   control). Left Provisional by design.
 
-## 5. Open question for the next cycle (decide with the board, not with hope)
+## 5. Positioning — DECIDED 2026-06-26 (was: open fork; now resolved by the strategy cycle)
 
-The kernel survived saturation. The honest fork:
+The prior "tool vs paper" fork is resolved by a cited positioning tournament
+([`POSITIONING.md`](POSITIONING.md), research in [`standards/erasure-durability/INTEGRATION.md`](standards/erasure-durability/INTEGRATION.md)):
 
-1. **Tool-first authority** (preferred by current evidence): `vdbresidue` is a real,
-   reusable DFIR/GDPR asset. Harden it, broaden engine coverage in `match` mode, ship it
-   as the reference erasure-verification tool. Compounds. Survives without a paper.
-2. **Paper** ("deletion is not erasure in vector DBs; deletion self-identifies the
-   residue"): defensible and novel beyond SIGMOD'07, but must clear Reviewer #2 against
-   MemAudit/MemLineage/secure-deletion literature (see GRAVEYARD). Paper is a *side
-   effect*, never the goal.
+- **Identity (decided):** Althaqeb is the **neutral authority on erasure durability in AI memory
+  systems** — *not* a broad "AI security authority" (that throne is MITRE ATLAS's; killed to
+  GRAVEYARD). Earned **tool-first**, with the **VEDC standard as the compounding asset**, and
+  **integrated INTO** GDPR 17 / ISO 27001 A.8.10 & 42001 / NIST AI RMF / OWASP AISVS / MITRE ATLAS
+  rather than competing. (Tournament: B=identity + C=sequencing unified; A & D killed.)
+- **Why it holds (cited):** the physical-residue layer is empty in all 6 frameworks + the
+  unlearning literature; the moat is **structural neutrality + maintained cross-engine registry +
+  being the cited reference** (not the discovery, which vendors document themselves). Sustain via
+  the **CIS open-core pattern** (free spec/auditor; paid assessment/cert/DFIR) + **diversified
+  funding** (Trap 1: single-funder near-death — CVE Apr-2025, MS-ISAC Sep-2025) and **funders ≠
+  registry** (Trap 2: OWASP 2017 WAF/RASP capture).
+- **Constitution edit proposed, NOT applied** — North Star narrowed from "AI Security" to "erasure
+  durability in AI memory." **Human ratification gate** (see POSITIONING §6).
 
-Default per doctrine: **strengthen the tool (asset that compounds) before writing the
-paper (output that decays).** Do not broaden scope into a "platform." Re-run the board
-review in `GRAVEYARD.md` §"How directions die here" before committing effort.
+### Next-cycle authority-conferring queue (highest-EV first; board EV note each)
+1. **Harden + ship `vdbresidue` as the reference erasure-verification tool** (tool-first identity).
+   *EV: Product+Maintainer — the compounding asset; everything else cites it.* Lead track.
+2. **Chroma coordinated disclosure** (already READY, human gate) — the headline VEDC-U+S finding in
+   the wild. *EV: Authority+Ethics — first real vendor reaction; confers reference status.*
+3. **OWASP AISVS C8.3.4 PR** ("verify deleted embedding is physically unrecoverable per VEDC class").
+   *EV: Authority — fastest cited-by-reference path; community-owned, no accreditation needed.*
+4. **arXiv preprint** ("deletion is not erasure in vector DBs; deletion self-identifies the
+   residue") — a *move*, not the identity; sequence AFTER 1–3 so it cites shipped artifacts.
+   *EV: Authority — but commoditizes if done first; D-as-tactic only.*
+
+Likely sequence: **harden → Chroma disclosure → AISVS PR → preprint.** Re-run the board before each.
 
 ---
 

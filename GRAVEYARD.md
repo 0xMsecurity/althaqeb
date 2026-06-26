@@ -27,6 +27,18 @@ Today's anchor date for "recent": 2026-06-23.
   deleted records persist). Reviewer #2 FATAL. Buried. The *durable HNSW vector* residue
   that survives compaction is the novel replacement.
 - **Six major paper designs** — died before the current kernel survived. Do not rebuild them.
+- **"Broad neutral authority in AI security" as the IDENTITY** (positioning tournament,
+  2026-06-26) — killed with fresh evidence. MITRE ATLAS already holds the broad adversarial-AI
+  taxonomy throne (ATT&CK-modeled, agentic+MCP coverage); OWASP/NIST own their layers. Competing
+  there solo fails Reviewer #2 + CEO + Reality. **Replacement (winner):** the *narrow*
+  erasure-durability / deletion-verification authority for AI memory, integrated INTO the
+  incumbents (see `POSITIONING.md`). The broad framing survives ONLY as the long-horizon ladder
+  domain, not the operating identity. Constitution North-Star edit proposed, awaiting human ratify.
+- **"Academic-first" as the IDENTITY** (same tournament) — killed as identity, **retained as a
+  move**. A paper decays and *commoditizes the method*, eroding the scarcity that is part of the
+  moat (an open academic cross-engine benchmark would let anyone replicate `vdbresidue`). Maintainer
+  + Commercial + CEO kill it as the position. A preprint remains a useful authority-conferring
+  *action* sequenced AFTER the tool/standard/disclosure — never the thing Althaqeb *is*.
 - **Disclosure framing as "CVE-track / critical vulnerability"** (severity-framing tournament,
   2026-06-26) — killed. Rivals: (A) CVE/high-severity "vulnerability", (B) privacy/compliance
   defect Low–Medium tiered by VEDC class, (C) pure docs/FYI. Pre-registered kill: any frame
