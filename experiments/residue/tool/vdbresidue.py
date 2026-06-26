@@ -30,6 +30,8 @@ Subcommands:
 Exit: 2 if recoverable deleted residue is found (CI/erasure gate), 0 if clean, 1 on error.
 """
 import sys, os, glob, json, struct, hashlib, shutil, time, argparse, mmap
+
+__version__ = "0.1.0"
 import numpy as np
 
 COC_LOG = "vdbresidue_coc.jsonl"   # chain-of-custody log (written in CWD or --out)
@@ -447,6 +449,7 @@ def cmd_verify(a):
 def main():
     ap = argparse.ArgumentParser(prog="vdbresidue", description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--version", action="version", version=f"vdbresidue {__version__}")
     ap.add_argument("--backend", choices=["chroma", "milvus", "qdrant", "weaviate", "generic"],
                     help="force backend")
     sub = ap.add_subparsers(dest="cmd", required=True)

@@ -1,5 +1,5 @@
 # MANIFEST.sha256 — chain-of-custody for vector-DB deletion-residue artifacts
-# generated 2026-06-26T08:00:51Z | host Linux 6.12.25-amd64 x86_64 | floor-hardening: phase7 JSON + phase26 qdrant digest-pin
+# generated 2026-06-26T08:10:23Z | host Linux 6.12.25-amd64 x86_64 | vdbresidue v0.1.0 packaging
 # verify: bash verify_manifest.sh
 #
 570802bc4b0a69966a4ff4ccbed9b45ac6f2522740a19b72e33229711c561c6e  cross_version/probe.py
@@ -59,7 +59,7 @@ f97abe769186a96aa4547c9e76383ba4c2d282bf08f764c57119378f757d01f0  scripts/phase6
 901891b847a5fd38f2ba46b18168ec77cf647250b8d1cd44339d40a63c799cd6  scripts/vecdb_residue_audit.py
 9b225cfe3d3bcb68ab1d5ccde71dc1b95c90f338f56f5ababae7901836004bed  tool/README.md
 9e07050f4b709f29af2f5029d1b1d0b4a1872237c8a5463573e0230ad0b4d4d1  tool/selftest.py
-8f4d548df364c8bc0046bfe5ddb1a838f240d1e9a4af936ec61e533bbd3f746e  tool/vdbresidue.py
+1393e54943360ca55d164cafb4d8611a30c1a569f6ab6f172bd3107de44b99ac  tool/vdbresidue.py
 93582e4e533a22b12eb82af8838e8317c740c8162b9d06c042264f7fc8c78036  run_all.sh
 ffa2eee6fea49363994da464ff5a0c6022db2194feb7a88d500cf3b99460015a  verify_manifest.sh
 5016a3350f79ad2a7b9f1bb818705e6fc014c06f601c7d20da3f1be3664bc95c  FINDINGS.md
@@ -85,3 +85,5 @@ ae1f0f599ec941ea95ec23d0c840a0c1cb94b57362a8593ff111270408aa2109  scripts/phase2
 eb374fd39c8fd35e891ef3b14b38e27d423b932b7a7e02f2765e2621dd4f546f  results/phase7_audit.json
 86933ebca2786a52f53c46a987b46f5e18c2eb941cbf3f9ae46abe3b1d57d408  scripts/phase26_qdrant_pinned.py
 742188ecb379325a694041e4ede212cedeec70790c921a4b388b74baa96246ba  results/phase26_qdrant_pinned.json
+6f2c6bf3fa81f8f77ead1d582e17dfe030fe509b9433c6529678e6c3f51d57b3  tool/pyproject.toml
+a386d23daa907983ecaaafbc4a20734fb3cb0c6f7090f4d5586c2f4f4c43aedf  tool/CHANGELOG.md
