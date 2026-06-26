@@ -6,7 +6,7 @@
 > how to resume. Governance lives in [`CONSTITUTION.md`](CONSTITUTION.md) (how to decide);
 > read [`GRAVEYARD.md`](GRAVEYARD.md) before proposing any new direction.
 
-- **Last updated:** 2026-06-24
+- **Last updated:** 2026-06-26
 - **Mission:** discover durable truth about whether *deletion is erasure* in agent /
   vector-database memory, and turn surviving truth into durable forensic assets.
 - **Phase:** experiments **SATURATED**; in **implementation / hardening / packaging**.
@@ -91,14 +91,25 @@ Everything lives under [`experiments/residue/`](experiments/residue/).
 - **`MANIFEST.sha256` + `verify_manifest.sh`** — chain-of-custody over the residue tree.
 - **`run_all.sh`** — tiered reproduction (cpu / postgres / docker / all / verify).
 - **`REPRODUCE.md`, `requirements.lock.txt`, `results/ENV.txt`** — pinned, deterministic.
-- **`disclosure/`** — coordinated-disclosure DRAFTS (chroma, milvus, weaviate,
-  qdrant_pgvector_fyi). **NOT SENT — human approval gate.**
+- **`disclosure/`** — coordinated-disclosure advisories, brought to **READY** (staged, NOT
+  sent) on 2026-06-26: each carries its committed **VEDC class** + conformance, cites the
+  registry-gated `results/*.json` + `scripts/phaseN_*.py` (no re-described numbers), and honest
+  per-engine severity. `README.md` now has a DRAFT→READY→SENT→ACK→FIXED→PUBLIC status tracker
+  (all rows **READY**, advance only by human action) + vendor security-contact channels
+  (text-only, GitHub private-advisory route). Severity frame chosen by tournament (privacy/
+  compliance defect won; CVE/critical escalation killed → `GRAVEYARD.md`). **NOT SENT — human gate.**
 
 ---
 
 ## 3. What is NOT done / blocked
 
-- **Disclosure not sent.** Ethical + human decision; drafts ready in `disclosure/`.
+- **Disclosure not sent.** Ethical + human decision; advisories are **READY** (staged) in
+  `disclosure/` — a human verifies the channel against each project's current `SECURITY.md`,
+  sends, and advances the tracker. The agent stops at READY.
+- **phase7 (2nd-model replication) is not a committed result.** Its run output goes to the
+  gitignored `logs/` (no `results/*.json`); the advisory cites the committed *script* as
+  reproducible corroboration, not as gated evidence. Optional follow-up: add a JSON dump and
+  commit it as registry-eligible evidence (deferred — corroborative, not core; manifest churn).
 - **Formal publication** deliberately deferred until evidence stabilizes (it has;
   the gate is now "is the paper worth more than the tool?" — see open question below).
 - **Inversion on non-gtr models** untested (vec2text ships gtr + ada-002 only). Does

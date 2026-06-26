@@ -1,14 +1,14 @@
 # MANIFEST.sha256 — chain-of-custody for vector-DB deletion-residue artifacts
-# generated 2026-06-22T11:36:52Z | host Linux 6.12.25-amd64 x86_64
+# generated 2026-06-26T07:08:09Z | host Linux 6.12.25-amd64 x86_64 | disclosure/ rehashed (READY staging, NO_FAKE-clean)
 # verify: bash verify_manifest.sh
 #
 570802bc4b0a69966a4ff4ccbed9b45ac6f2522740a19b72e33229711c561c6e  cross_version/probe.py
 0d73b1e745750b59d29caf55addca5a8ce37cbd4d44719d584c6f84118f789cb  cross_version/run_bisect.sh
-a2be7ac92f6d022b030c9e307f56371efa94c260541d7c01beafe25f7cd88ecf  disclosure/chroma.md
-24912c428617cd8a7d1e09b1f7a16c680d34f798593d1022859b05501f583e9b  disclosure/milvus.md
-fd0e759a98356b0ff5e438271b45faaed53531dc8f377433e2d7f9183aee78b4  disclosure/qdrant_pgvector_fyi.md
-1956a16bb542abb88eadb960eca25dfc5a4c843d5e420b2bcafe2f7fcb98d234  disclosure/README.md
-2f17eb845a3acb4b68555403f6c368f03d60cd8b1bba8298a6920449be245b90  disclosure/weaviate.md
+7a27f6d290dcbfb64ba870a2b787b240223519c2981846b0958b6040d931a03c  disclosure/chroma.md
+b92681c488c13f136d8c8b28b5f3c879802979afa317f4b1b8ed6868f8e12615  disclosure/milvus.md
+a270522e046a6401a8bf88b06ce1d55226db6c5b78e8a71f6a859d47c159b0fa  disclosure/qdrant_pgvector_fyi.md
+ff141efb38aaade2d258d11487dce3cd142d5b92c785d56c90b80d1ac37f7cee  disclosure/README.md
+33c2b20f823eec65521a2bed5866eeafa9a4c0220b4d509a3ead35ceabeed9bb  disclosure/weaviate.md
 e088fd7eac217ed1d21cb263066528a1f5593ea84b4ac07b107310998cbd4a45  results/cross_version_chroma.jsonl
 99e45837720d6df228f33eb3ac828a84214821f985f7ea61709bda74b6ffe622  results/cross_version_chroma_summary.json
 d7fb5b8428cb1fc503966191ea5d4b898a438a9c459212f28eea9e2be6752332  results/ENV.txt

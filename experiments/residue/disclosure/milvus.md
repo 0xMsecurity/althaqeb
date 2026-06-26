@@ -1,6 +1,13 @@
 # DRAFT — Milvus: deleted vectors persist in segment binlogs until compaction+GC reclaim
 
-**Status: DRAFT, not sent.**
+**Status: READY (staged, NOT sent).**
+
+**VEDC classification: `VEDC-AT+S` (Auto / timed, self-identifying) — Conformance: Provisional.**
+Residue is auto-reclaimed on a compaction+GC timer (`AT`); the delta tombstone makes deletion
+self-identifying (`+S`). "Provisional" = strong multi-condition evidence (3 conditions below)
+but not yet multi-seed (the ~16-min 3-container run is deferred by a deliberate cost/value
+call; see `../../../STATE.md` §4). Data-lifecycle / "deletion ≠ secure erasure" finding,
+Low–Medium severity, gated on read access to the object store.
 
 ## Summary
 After `delete(ids=...)` + `flush()` (logical query for the ids returns empty), the deleted

@@ -27,6 +27,16 @@ Today's anchor date for "recent": 2026-06-23.
   deleted records persist). Reviewer #2 FATAL. Buried. The *durable HNSW vector* residue
   that survives compaction is the novel replacement.
 - **Six major paper designs** — died before the current kernel survived. Do not rebuild them.
+- **Disclosure framing as "CVE-track / critical vulnerability"** (severity-framing tournament,
+  2026-06-26) — killed. Rivals: (A) CVE/high-severity "vulnerability", (B) privacy/compliance
+  defect Low–Medium tiered by VEDC class, (C) pure docs/FYI. Pre-registered kill: any frame
+  asserting an uncomputed number, sensationalizing, or giving no defensive uplift dies.
+  **A killed** — requires filesystem/object-store access (not remote); any CVSS/"critical"
+  label is an asserted number (NO-FAKE); Adversary: vendors rightly dispute "vulnerability" for
+  expected LSM behavior, weakening Authority. **C killed for the headline** (under-claims the
+  novel unbounded+self-identifying+invertible result; hands vendors "working as intended") but
+  is correct for self-cleaning FYI-tier engines. **Winner: B**, tiered, severity anchored to the
+  committed VEDC class. Do not re-escalate to CVE/critical without a computed, committed score.
 
 ---
 

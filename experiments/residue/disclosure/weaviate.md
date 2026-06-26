@@ -1,6 +1,12 @@
 # DRAFT — Weaviate: deleted object vectors persist on disk pending async tombstone cleanup
 
-**Status: DRAFT, not sent.**
+**Status: READY (staged, NOT sent).**
+
+**VEDC classification: `VEDC-AT` (Auto / timed) — Conformance: Confirmed.**
+Residue is auto-reclaimed by the async tombstone-cleanup pass on a timer (`AT`); not
+self-identifying. "Confirmed" = multi-seed (phase19, ×3 seeds). Low severity — a transient,
+interval-bounded on-disk window, not durable retention; worth a documentation note on erasure
+completeness vs the cleanup interval.
 
 ## Summary
 After `DELETE /v1/objects/<Class>/<id>` (subsequent GET returns 404), the deleted object's
@@ -19,6 +25,8 @@ control on a live filler vector).
 ## Evidence
 - `../results/phase10_weaviate.json`: 5/5 deleted vectors present BEFORE delete, AFTER delete
   (GET=404), and AFTER 300-insert churn + 20s wait. Async tombstone cleanup did not fire in window.
+- `../results/phase19_weaviate_multiseed.json`: multi-seed (×3) confirmation of the same
+  post-delete window + timed purge — the basis for the **Confirmed** `VEDC-AT` classification.
 
 ## Impact / severity — LOW (residue is transient)
 UPDATE (phase14): Weaviate's tombstone cleanup **does purge** the deleted vector from disk.

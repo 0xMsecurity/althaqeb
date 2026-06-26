@@ -1,6 +1,15 @@
 # DRAFT — ChromaDB: deleted embedding vectors remain recoverable (and invertible) on disk
 
-**Status: DRAFT, not sent. Coordinated-disclosure, no public PoC before agreement.**
+**Status: READY (staged, NOT sent). Coordinated-disclosure, no public PoC before agreement.**
+
+**VEDC classification: `VEDC-U+S` (Unbounded, self-identifying) — Conformance: Confirmed.**
+Under the VEDC erasure-durability standard (`../../../standards/erasure-durability/SPEC.md`,
+roster in `CLASSIFICATION.md`), ChromaDB is the **only** engine of 10 with class `U`
+(no observed reclamation across any tested attack). `+S` = deletion is self-identifying, so
+recovery targets exactly the erased records. "Confirmed" = multi-seed + cross-version evidence
+through the registry's evidence gate. This is a **data-lifecycle / "deletion ≠ secure erasure"**
+finding (privacy/compliance), not a remote/memory-safety vulnerability — severity Low–Medium,
+gated on filesystem/backup access to the persistence directory.
 
 ## Summary
 After `collection.delete(ids=...)` returns and the logical layer reports the records gone
@@ -35,8 +44,15 @@ Full env in `../results/ENV.txt`; pinned deps in `../requirements.lock.txt`; ste
 - `../results/phase6_blind_deletemark.json`: `DELETE_MARK` selects exactly 5/5 deleted of 3005, blind.
 - `../results/phase2_seed{0..4}.json`: residue persists across 50k inserts, 3 restart cycles,
   and `delete_collection` — **no observed reclamation** (5 seeds).
-- `../results/phase7_audit.log`: independent replication, default MiniLM-L6-v2 (dim 384),
-  realistic PII records: 8/8 deleted records recovered after compaction.
+- `../results/phase16_chroma_idle.json`, `../results/phase13_chroma_reclaim_attack.json`,
+  `../results/phase12_chroma_highratio.json`: no reclamation under idle time, four active
+  reclaim attacks (slot-reuse churn, 100%-delete refill, re-add same ids, tiny-batch churn),
+  or a 60% high-ratio delete — the evidence basis for the `VEDC-U` (unbounded) class.
+- `../scripts/phase7_audit_validation.py`: an independent replication on Chroma's **default**
+  MiniLM-L6-v2 (dim 384) embedding fn with realistic PII records — a different model + dim than
+  the gtr runs, rebutting synthetic-data bias. Reproducible from the committed script; its run
+  output is not checked in (`logs/` is gitignored), so it **corroborates** rather than serving as
+  gated evidence. The gated recovery numbers are the registry-cited `results/*.json` above.
 - Inversion: `../results/phase1_seed0.json` (vec2text gtr-base) reconstructs trigger-bearing
   text from the residue (cosine 0.89–0.97; trigger-token preservation 0.8–1.0).
 
