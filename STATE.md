@@ -230,18 +230,27 @@ The prior "tool vs paper" fork is resolved by a cited positioning tournament
 - **Constitution edit proposed, NOT applied** — North Star narrowed from "AI Security" to "erasure
   durability in AI memory." **Human ratification gate** (see POSITIONING §6).
 
-### Next-cycle authority-conferring queue (highest-EV first; board EV note each)
-1. **Harden + ship `vdbresidue` as the reference erasure-verification tool** (tool-first identity).
-   *EV: Product+Maintainer — the compounding asset; everything else cites it.* Lead track.
-2. **Chroma coordinated disclosure** (already READY, human gate) — the headline VEDC-U+S finding in
-   the wild. *EV: Authority+Ethics — first real vendor reaction; confers reference status.*
-3. **OWASP AISVS C8.3.4 PR** ("verify deleted embedding is physically unrecoverable per VEDC class").
-   *EV: Authority — fastest cited-by-reference path; community-owned, no accreditation needed.*
-4. **arXiv preprint** ("deletion is not erasure in vector DBs; deletion self-identifies the
-   residue") — a *move*, not the identity; sequence AFTER 1–3 so it cites shipped artifacts.
-   *EV: Authority — but commoditizes if done first; D-as-tactic only.*
+### Authority-conferring queue — STATUS after autopilot run 2026-06-26
+AUTO work all DONE; everything remaining is a HUMAN GATE (see AUTOPILOT SUMMARY / GATE QUEUE).
+1. ✅ **Floor hardened** — phase7 committed (8/8 MiniLM, in registry), Qdrant digest pinned
+   (phase26, qdrant 1.18.2). Advisories upgraded.
+2. ✅ **Prior-art/exact-delta** — SPEC §7 rewritten airtight (concedes 800-88/IEEE 2883/Stahlberg;
+   isolates the AI-memory delta).
+3. ⛔ **arXiv preprint** — DRAFTED `paper/PREPRINT.md` (every number traced). **SUBMIT = gate.**
+4. ⛔ **`vdbresidue` v0.1.0** — PACKAGED (pyproject + changelog + `--version`), local tag
+   `vdbresidue-v0.1.0`. **PUBLISH (PyPI/release) = gate.**
+5. ⛔ **OWASP AISVS C8.3.4** — DRAFTED `standards/erasure-durability/contrib/owasp-aisvs-c8.3.4.md`
+   (requirement + exact diff). **OPEN PR = gate.**
+6. ⛔ **Chroma disclosure** — READY, kept current vs hardened evidence. **SEND = gate.**
+7. ✅ **INTEGRATION/standard hardening** — crosswalk links the staged AISVS contrib.
+8. ⛔ **Constitution North-Star narrowing** — staged POSITIONING §6. **RATIFY = gate.**
 
-Likely sequence: **harden → Chroma disclosure → AISVS PR → preprint.** Re-run the board before each.
+**Recommended human order:** ratify North-Star → submit preprint (stake priority) → send Chroma
+disclosure → open AISVS PR (cite arXiv id) → publish `vdbresidue` → push all local commits.
+**Next AUTO move once gates clear (NOT busywork, real compounding):** a **quantization-aware
+detector** (dequantize-then-cosine with the engine's scale/codebook) to close the float32 blind
+spot — the #1 limitation (SPEC §9), would extend `VEDC-N` validity beyond float32. Larger
+experiment; unblocks nothing, so it waited behind the gates.
 
 ---
 
