@@ -79,7 +79,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.lock.txt
 ```bash
 # experiments + tool
 cd experiments/residue
-./verify_manifest.sh        # chain-of-custody over the evidence tree (66 artifacts)
+./verify_manifest.sh        # chain-of-custody over the evidence tree (77 artifacts)
 ./run_all.sh cpu            # CPU-only phases
 ./run_all.sh docker         # engine phases requiring docker (qdrant/weaviate/milvus)
 

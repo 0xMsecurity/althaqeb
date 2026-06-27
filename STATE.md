@@ -219,7 +219,7 @@ The prior "tool vs paper" fork is resolved by a cited positioning review
   systems** — *not* a broad "AI security authority" (that throne is MITRE ATLAS's; killed to
   GRAVEYARD). Earned **tool-first**, with the **VEDC standard as the compounding asset**, and
   **integrated INTO** GDPR 17 / ISO 27001 A.8.10 & 42001 / NIST AI RMF / OWASP AISVS / MITRE ATLAS
-  rather than competing. (Tournament: B=identity + C=sequencing unified; A & D killed.)
+  rather than competing.
 - **Why it holds (cited):** the physical-residue layer is empty in all 6 frameworks + the
   unlearning literature; the moat is **structural neutrality + maintained cross-engine registry +
   being the cited reference** (not the discovery, which vendors document themselves). Sustain via
