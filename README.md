@@ -32,7 +32,7 @@ This repo is built as a ladder; each rung is grounded in the one below it:
 | File | What it is |
 |---|---|
 | [`STATE.md`](STATE.md) | Self-contained state of record — read this first. |
-| [`CONSTITUTION.md`](CONSTITUTION.md) / [`DOCTRINE.md`](DOCTRINE.md) | How decisions are made (North Star + 14-department review, Reality has veto). |
+| [`PRINCIPLES.md`](PRINCIPLES.md) | How decisions are made — principles & method (North Star, 14 review lenses, Reality has veto). |
 | [`GRAVEYARD.md`](GRAVEYARD.md) | Dead directions + why. Read before proposing anything new. |
 | [`benchmarks/deletion-durability/MATRIX.md`](benchmarks/deletion-durability/MATRIX.md) | The cross-engine durability matrix (generated). |
 | [`standards/erasure-durability/SPEC.md`](standards/erasure-durability/SPEC.md) | The VEDC classification spec + `CLASSIFICATION.md` roster. |

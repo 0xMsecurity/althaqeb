@@ -1,4 +1,10 @@
-# RESULTS — raw observations
+# RESULTS — raw observations (ARCHIVED / SUPERSEDED)
+
+> **Superseded early-exploration snapshot (EXP 01–05).** These are the first five
+> exploratory experiments, kept verbatim for provenance. The current, evidence-gated
+> record is [`../residue/FINDINGS.md`](../residue/FINDINGS.md) and the per-engine registry
+> under `benchmarks/deletion-durability/`. Numbers here are unchanged from when they were
+> recorded; this file is not part of the live evidence chain.
 
 Every line here traces to executed code in `experiments/`. Single machine, CPU.
 Pinned: chromadb 1.5.9, torch 2.12.1+cpu, transformers 4.46.3, sentence-transformers 5.6.0,

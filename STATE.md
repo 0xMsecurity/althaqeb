@@ -3,7 +3,7 @@
 > Self-contained continuity snapshot. If every other context (chat history, external
 > memory, the people) disappeared, this file plus the artifacts it points to must be
 > enough for a stranger to understand what was done, what is true, what is dead, and
-> how to resume. Governance lives in [`CONSTITUTION.md`](CONSTITUTION.md) (how to decide);
+> how to resume. Governance lives in [`PRINCIPLES.md`](PRINCIPLES.md) (how to decide);
 > read [`GRAVEYARD.md`](GRAVEYARD.md) before proposing any new direction.
 
 - **Last updated:** 2026-06-26
@@ -171,8 +171,8 @@ positive-control conformance rule and a dual-use ethics stance.
 
 CI: [`.github/workflows/registry-integrity.yml`](.github/workflows/registry-integrity.yml)
 re-runs both gates on every push/PR and fails if generated artifacts go stale → the
-NO-FAKE-RESULTS gate is now permanent, not manual. Governance: [`DOCTRINE.md`](DOCTRINE.md)
-(14 departments, Reality veto) operationalizes the board.
+NO-FAKE-RESULTS gate is now permanent, not manual. Governance: [`PRINCIPLES.md`](PRINCIPLES.md)
+(14 review lenses, Reality veto) operationalizes the board.
 
 ## 4d. Replication status (Provisional → Confirmed) + new engines
 

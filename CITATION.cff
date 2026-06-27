@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite the preprint and/or the software below."
+title: "Deletion Is Not Erasure: Measuring Vector-Store Erasure Durability in AI Memory Systems"
+# NOTE: Fill given-names / family-names / orcid / affiliation before publishing.
+# The preprint lists the author as "TO BE SET BY HUMAN"; this file must not assert one.
+authors:
+  - given-names: "TO BE SET BY AUTHOR"
+    family-names: "TO BE SET BY AUTHOR"
+    alias: "0xMsecurity"
+repository-code: "https://github.com/0xMsecurity/althaqeb"
+license: MIT
+type: software
+keywords:
+  - ai-security
+  - agent-memory
+  - vector-database
+  - forensics
+  - embedding-inversion
+  - vec2text
+  - hnsw
+  - erasure-durability
+preferred-citation:
+  type: article
+  title: "Deletion Is Not Erasure: Measuring Vector-Store Erasure Durability in AI Memory Systems"
+  status: preprint
+  year: 2026
+  notes: "DRAFT — not submitted. See paper/PREPRINT.md. Author/affiliation to be set by the human author before submission."
+  authors:
+    - given-names: "TO BE SET BY AUTHOR"
+      family-names: "TO BE SET BY AUTHOR"
+      alias: "0xMsecurity"

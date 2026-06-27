@@ -66,3 +66,6 @@ node_modules/
 .claude-flow/
 .swarm/
 .hive-mind/
+
+# internal operating scaffolding (prompts, cycle logs) — not a public artifact
+.operating/
