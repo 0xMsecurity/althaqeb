@@ -25,5 +25,5 @@ no-LLM, no-network. Chain-of-custody JSONL on every operation.
 - Detector is **float32-exact**; quantized (int8/PQ/binary) residue requires a quantization-aware
   detector (future work). Per VEDC SPEC §9, a "no residue" result is **format-scoped**.
 
-### Not in this release (human gate)
-- PyPI publish and public Source/Standard URLs (`pyproject.toml` has TODO(human) placeholders).
+### Not in this release
+- PyPI publish (the package is built and tagged locally; not yet uploaded).

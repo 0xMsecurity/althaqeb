@@ -91,21 +91,20 @@ Everything lives under [`experiments/residue/`](experiments/residue/).
 - **`MANIFEST.sha256` + `verify_manifest.sh`** — chain-of-custody over the residue tree.
 - **`run_all.sh`** — tiered reproduction (cpu / postgres / docker / all / verify).
 - **`REPRODUCE.md`, `requirements.lock.txt`, `results/ENV.txt`** — pinned, deterministic.
-- **`disclosure/`** — coordinated-disclosure advisories, brought to **READY** (staged, NOT
-  sent) on 2026-06-26: each carries its committed **VEDC class** + conformance, cites the
-  registry-gated `results/*.json` + `scripts/phaseN_*.py` (no re-described numbers), and honest
-  per-engine severity. `README.md` now has a DRAFT→READY→SENT→ACK→FIXED→PUBLIC status tracker
-  (all rows **READY**, advance only by human action) + vendor security-contact channels
-  (text-only, GitHub private-advisory route). Severity frame chosen by tournament (privacy/
-  compliance defect won; CVE/critical escalation killed → `GRAVEYARD.md`). **NOT SENT — human gate.**
+- **Per-vendor advisories** — drafted to a ready state: each carries its committed **VEDC class**
+  + conformance, cites the registry-gated `results/*.json` + `scripts/phaseN_*.py` (no re-described
+  numbers), and an honest per-engine severity, using the privacy/compliance-defect frame
+  (CVE/critical escalation was killed → `GRAVEYARD.md`). They are **withheld from the public tree
+  pending coordinated disclosure** (held under git-ignored `.operating/`, with text-only vendor
+  security-contact channels noted). **Not sent — an author decision.**
 
 ---
 
 ## 3. What is NOT done / blocked
 
-- **Disclosure not sent.** Ethical + human decision; advisories are **READY** (staged) in
-  `disclosure/` — a human verifies the channel against each project's current `SECURITY.md`,
-  sends, and advances the tracker. The agent stops at READY.
+- **Disclosure not sent.** A coordinated-disclosure decision for the author: the advisories are
+  staged and withheld, to be sent through each project's current `SECURITY.md` channel before any
+  per-vendor advisory is published.
 - **phase7 (2nd-model replication) — RESOLVED 2026-06-26.** Now emits a committed
   `results/phase7_audit.json` (8/8 deleted MiniLM-L6-v2 PII records recovered post-compaction,
   auditor PASS); added to ChromaDB's gated registry evidence (strengthens VEDC-U+S vs the
@@ -172,7 +171,7 @@ positive-control conformance rule and a dual-use ethics stance.
 CI: [`.github/workflows/registry-integrity.yml`](.github/workflows/registry-integrity.yml)
 re-runs both gates on every push/PR and fails if generated artifacts go stale → the
 NO-FAKE-RESULTS gate is now permanent, not manual. Governance: [`PRINCIPLES.md`](PRINCIPLES.md)
-(14 review lenses, Reality veto) operationalizes the board.
+(14 review lenses, with a reality check that can veto) documents how decisions are made.
 
 ## 4d. Replication status (Provisional → Confirmed) + new engines
 
@@ -211,9 +210,9 @@ with no recoverable post-delete residue. SPEC §9 limitation is now ADDRESSED; s
   (their no-false-positive role is already demonstrated by every positive engine's positive
   control). Left Provisional by design.
 
-## 5. Positioning — DECIDED 2026-06-26 (was: open fork; now resolved by the strategy cycle)
+## 5. Positioning — decided 2026-06-26
 
-The prior "tool vs paper" fork is resolved by a cited positioning tournament
+The prior "tool vs paper" fork is resolved by a cited positioning review
 ([`POSITIONING.md`](POSITIONING.md), research in [`standards/erasure-durability/INTEGRATION.md`](standards/erasure-durability/INTEGRATION.md)):
 
 - **Identity (decided):** Althaqeb is the **neutral authority on erasure durability in AI memory
@@ -230,27 +229,33 @@ The prior "tool vs paper" fork is resolved by a cited positioning tournament
 - **Constitution edit proposed, NOT applied** — North Star narrowed from "AI Security" to "erasure
   durability in AI memory." **Human ratification gate** (see POSITIONING §6).
 
-### Authority-conferring queue — STATUS after autopilot run 2026-06-26
-AUTO work all DONE; everything remaining is a HUMAN GATE (see AUTOPILOT SUMMARY / GATE QUEUE).
-1. ✅ **Floor hardened** — phase7 committed (8/8 MiniLM, in registry), Qdrant digest pinned
-   (phase26, qdrant 1.18.2). Advisories upgraded.
-2. ✅ **Prior-art/exact-delta** — SPEC §7 rewritten airtight (concedes 800-88/IEEE 2883/Stahlberg;
-   isolates the AI-memory delta).
-3. ⛔ **arXiv preprint** — DRAFTED `paper/PREPRINT.md` (every number traced). **SUBMIT = gate.**
-4. ⛔ **`vdbresidue` v0.1.0** — PACKAGED (pyproject + changelog + `--version`), local tag
-   `vdbresidue-v0.1.0`. **PUBLISH (PyPI/release) = gate.**
-5. ⛔ **OWASP AISVS C8.3.4** — DRAFTED `standards/erasure-durability/contrib/owasp-aisvs-c8.3.4.md`
-   (requirement + exact diff). **OPEN PR = gate.**
-6. ⛔ **Chroma disclosure** — READY, kept current vs hardened evidence. **SEND = gate.**
-7. ✅ **INTEGRATION/standard hardening** — crosswalk links the staged AISVS contrib.
-8. ⛔ **Constitution North-Star narrowing** — staged POSITIONING §6. **RATIFY = gate.**
+### Authority-conferring queue — status
 
-**Recommended human order:** ratify North-Star → submit preprint (stake priority) → send Chroma
-disclosure → open AISVS PR (cite arXiv id) → publish `vdbresidue` → push all local commits.
-**Next AUTO move once gates clear (NOT busywork, real compounding):** a **quantization-aware
-detector** (dequantize-then-cosine with the engine's scale/codebook) to close the float32 blind
-spot — the #1 limitation (SPEC §9), would extend `VEDC-N` validity beyond float32. Larger
-experiment; unblocks nothing, so it waited behind the gates.
+Foundational work is complete; the remaining items are author decisions (external actions under
+the author's name), not engineering tasks.
+
+1. **Done — floor hardened:** phase7 committed (8/8 MiniLM, in registry), Qdrant digest pinned
+   (phase26, qdrant 1.18.2); advisories upgraded.
+2. **Done — prior-art / exact-delta:** SPEC §7 rewritten airtight (concedes 800-88 / IEEE 2883 /
+   Stahlberg; isolates the AI-memory delta).
+3. **Author decision — arXiv preprint:** drafted in `paper/PREPRINT.md` (every number traced).
+   Submission stakes priority.
+4. **Author decision — `vdbresidue` v0.1.0:** packaged (pyproject + changelog + `--version`),
+   local tag `vdbresidue-v0.1.0`. PyPI / release publish pending.
+5. **Author decision — OWASP AISVS C8.3.4:** drafted in
+   `standards/erasure-durability/contrib/owasp-aisvs-c8.3.4.md` (requirement + exact diff).
+   Opening the PR pending.
+6. **Author decision — vendor disclosure:** advisories ready, withheld pending coordinated
+   disclosure.
+7. **Done — INTEGRATION / standard hardening:** crosswalk links the staged AISVS contrib.
+8. **Author decision — North-Star narrowing:** proposed in POSITIONING §6; awaits ratification.
+
+**Suggested order:** ratify the North-Star narrowing → submit the preprint (stake priority) →
+send the disclosure → open the AISVS PR (cite the arXiv id) → publish `vdbresidue`.
+**Next engineering step once those clear:** a **quantization-aware detector** (dequantize-then-cosine
+with the engine's scale/codebook) to close the float32 blind spot — the #1 limitation (SPEC §9);
+it would extend `VEDC-N` validity beyond float32. A larger experiment that blocks nothing, so it
+waited behind these decisions.
 
 ---
 

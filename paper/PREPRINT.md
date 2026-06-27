@@ -1,10 +1,10 @@
 # Deletion Is Not Erasure: Measuring Vector-Store Erasure Durability in AI Memory Systems
 
-> **STATUS: DRAFT — NOT SUBMITTED.** Staged for human review. Submission to arXiv (or anywhere)
-> is an external emission under the human author's name and is a Human Gate (autopilot §4). Every
-> quantitative claim below cites a committed result file under `experiments/residue/results/`; no
-> number is asserted. URLs for external frameworks are in [`../POSITIONING.md`](../POSITIONING.md)
-> §3 (single source of truth). Author/affiliation: **TO BE SET BY HUMAN**.
+> **Status: draft — not submitted.** Every quantitative claim below cites a committed result file
+> under `experiments/residue/results/`; no number is asserted without one. URLs for the external
+> frameworks referenced are listed in [`../POSITIONING.md`](../POSITIONING.md) §3.
+>
+> **Author:** Mohammed Hani (Msecurity Bh) · GitHub [@0xMsecurity](https://github.com/0xMsecurity) · [msecurity.bh](https://msecurity.bh)
 
 ## Abstract
 
@@ -127,11 +127,11 @@ executable cross-engine VEDC classification. No "first" is claimed beyond this d
 
 Dual-use: the method verifies GDPR erasure (defensive) and also recovers "deleted" vectors
 (offensive). We frame for the defensive case and ship a **read-only** auditor (never mutates a
-target). Engine-specific findings are handled under **coordinated disclosure**
-(`experiments/residue/disclosure/`), at honest, non-sensational severity (Low–Medium, filesystem-
-access-gated), with **no public inversion PoC before vendor agreement**. No vendor has been contacted
-at the time of this draft; disclosure is gated on the human author and should follow priority-staking
-(this preprint) per standard coordinated-disclosure practice.
+target). Engine-specific findings are handled under **coordinated disclosure** at honest,
+non-sensational severity (Low–Medium, filesystem-access-gated), with **no public inversion PoC
+before vendor agreement**; per-vendor advisories are withheld pending that process. No vendor had
+been contacted at the time of this draft; disclosure should follow priority-staking (this preprint)
+per standard coordinated-disclosure practice.
 
 ## 8. Limitations (honest)
 

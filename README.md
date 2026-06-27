@@ -14,7 +14,12 @@ evidence into durable, reusable assets.
 
 Every claim here is traceable to a committed script + result JSON + log. Negative results are
 kept, not hidden. A build gate (`build_matrix.py`) **fails** if any published claim loses its
-evidence file — NO FAKE RESULTS is enforced mechanically, not promised.
+evidence file — no claim is asserted without its evidence file, and that rule is enforced
+mechanically rather than promised.
+
+This is an **open community contribution, built to be extended** — the registry, tool, and VEDC
+standard are designed for reuse. New engines, additional seeds, and independent reproductions are
+welcome; PRs and reuse are the point.
 
 ## The layers (research → tool → registry → standard)
 
@@ -95,7 +100,8 @@ re-runs both gates on every push.
   heap), Postgres heap — plus FAISS / Qdrant-local as clean negatives.
 - **Experiments:** saturated. Now in registry/standard hardening; next experiment = multi-seed
   replication to upgrade Provisional → Confirmed.
-- **Disclosure:** drafts ready under `experiments/residue/disclosure/`, **not sent** (human gate).
+- **Disclosure:** per-vendor advisories are **withheld pending coordinated disclosure**; the
+  finding itself is documented in the paper and standard. See [`SECURITY.md`](SECURITY.md).
 
 ## Ethics
 
@@ -103,4 +109,21 @@ These experiments recover *synthetic* poison and test PII only. The same capabil
 *deleted user data* — treat it as **dual-use**. The tooling is read-only and built for the
 defensive case (verifying an erasure actually removed data). The VEDC method has a documented
 quantization blind spot (SPEC §9) — "no float32 residue" is not "no recoverable residue".
-See `SECURITY.md`; disclosure is coordinated and gated on human approval.
+See `SECURITY.md`; disclosure is coordinated, and per-vendor advisories are withheld pending it.
+
+## Author & contact
+
+**Mohammed Hani** — Msecurity Bh
+Instagram [@msecurity.bh](https://instagram.com/msecurity.bh) · GitHub [@0xMsecurity](https://github.com/0xMsecurity) · [msecurity.bh](https://msecurity.bh)
+Security contact: [`SECURITY.md`](SECURITY.md).
+
+## How to cite
+
+> Mohammed Hani (Msecurity Bh). *Deletion Is Not Erasure: Measuring Vector-Store Erasure
+> Durability in AI Memory Systems.* 2026. https://github.com/0xMsecurity/althaqeb
+
+Machine-readable metadata: [`CITATION.cff`](CITATION.cff).
+
+## License
+
+MIT — see [`LICENSE`](LICENSE). © 2026 Mohammed Hani (Msecurity Bh).

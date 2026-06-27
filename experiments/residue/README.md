@@ -7,7 +7,7 @@ tool. Everything here is reproducible, manifest-verified, and CPU-only.
 > Scope note: this is a **data-lifecycle / "deletion ≠ secure erasure"** study (same family as
 > Stahlberg et al., SIGMOD 2007), not a memory-safety/RCE finding. It requires filesystem/
 > backup/snapshot access to the persistence directory. No "first"/novelty claims are made;
-> see the honest novelty notes in `disclosure/README.md`.
+> see the prior-art and novelty notes in `FINDINGS.md` and `../../paper/PREPRINT.md`.
 
 ## Headline (evidence-backed, with self-corrections)
 1. **Universal post-delete recovery window** — in all 6 real engines tested (ChromaDB, Milvus,
@@ -40,7 +40,6 @@ scripts/               phase1..phase18 experiments (+ legacy)
 results/               *.json results, ENV.txt, poison_embeddings.npy
 logs/                  raw run logs
 tool/                  vdbresidue — read-only forensic auditor + selftest + README
-disclosure/            DRAFT vendor disclosures (NOT SENT — human-gated)
 cross_version/         ChromaDB version bisection harness
 db/, .venv/, hf_cache/, build/   gitignored (reproducible from scratch)
 ```

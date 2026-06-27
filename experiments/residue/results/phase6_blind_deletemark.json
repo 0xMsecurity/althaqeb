@@ -1,5 +1,5 @@
 {
-  "segment": "/home/msec/opt/althaqeb/experiments/residue/db/chroma_gtr_seed0/f81f5485-5456-4f27-b05e-08caded741da/data_level0.bin",
+  "segment": "<repo>/experiments/residue/db/chroma_gtr_seed0/f81f5485-5456-4f27-b05e-08caded741da/data_level0.bin",
   "total_elements": 3005,
   "delete_marked": 5,
   "deleted_indices": [

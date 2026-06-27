@@ -160,10 +160,10 @@ this delta; the persistence phenomenon and the verify-erasure principle are prio
 This method is **dual-use**: it verifies GDPR erasure (defensive) and also recovers
 "deleted" sensitive vectors (offensive). VEDC is framed for the defensive case —
 erasure verification and DFIR. Engine-specific findings are handled under coordinated
-disclosure (see [`experiments/residue/disclosure/`](../../experiments/residue/disclosure/));
-classifications are published only at honest, non-sensational severity.
+disclosure; per-vendor advisories are withheld pending it, and classifications are
+published only at honest, non-sensational severity.
 
-## 9. Limitations & detector scope (Adversary / Reviewer #2 self-attack)
+## 9. Limitations & detector scope
 
 The normative detector (§4) searches for **float32** byte-exactness / cosine > 0.999. This has
 a known blind spot that callers MUST respect:

@@ -10,14 +10,14 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "Apache-2.0" }
 keywords = ["forensics", "dfir", "gdpr", "erasure", "vector-database", "embeddings", "vedc"]
-authors = [{ name = "Althaqeb" }]
+authors = [{ name = "Mohammed Hani (Msecurity Bh)" }]
 # Core auditor is dependency-light by design (read-only file forensics). numpy is the only
 # hard runtime need for vector math; engine clients are NOT required to audit on-disk files.
 dependencies = ["numpy>=1.24"]
 
 [project.urls]
-Standard = "https://example.invalid/vedc"  # TODO(human): set on publish — VEDC SPEC URL
-Source = "https://example.invalid/althaqeb" # TODO(human): set on publish
+Source = "https://github.com/0xMsecurity/althaqeb"
+Standard = "https://github.com/0xMsecurity/althaqeb/blob/main/standards/erasure-durability/SPEC.md"
 
 [project.scripts]
 vdbresidue = "vdbresidue:main"

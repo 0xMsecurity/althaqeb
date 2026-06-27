@@ -62,7 +62,7 @@ node_modules/
 *.swp
 *.swo
 
-# ruflo plugin telemetry
+# local agent/tooling telemetry (not part of the artifact)
 .claude-flow/
 .swarm/
 .hive-mind/

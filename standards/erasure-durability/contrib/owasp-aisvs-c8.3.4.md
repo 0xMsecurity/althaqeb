@@ -1,8 +1,7 @@
 # Staged contribution — OWASP AISVS C8.3.4 (physical unrecoverability of deleted embeddings)
 
-> **STATUS: DRAFT, staged. The PR is NOT opened.** Opening a PR against `OWASP/AISVS` is an
-> external emission under the human's identity (autopilot §4 gate). This file holds the proposed
-> requirement text, the rationale, and the exact diff so a human can open it verbatim.
+> **Status: draft, staged — the PR is not opened.** This file holds the proposed requirement
+> text, the rationale, and the exact diff so a maintainer can open it verbatim.
 > Target file: `OWASP/AISVS` → `1.0/en/0x10-C08-Memory-Embeddings-and-Vector-Database.md`.
 
 ## Why (the gap, sourced)

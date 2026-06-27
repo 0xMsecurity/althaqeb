@@ -1,10 +1,10 @@
 # ALTHAQEB — POSITIONING (decision of record)
 
-> Output of the 2026-06-26 strategy/positioning research cycle. This is a **decision +
-> integration map**, not a new pillar. It resolves the identity question and proposes one
-> exact edit to `CONSTITUTION.md`'s North Star (flagged for **human ratification** — not
-> silently applied). Research below is primary-source-cited; unsourced reasoning is labeled.
-> NO FAKE RESULTS extends to strategy: no invented adoption, market size, or revenue.
+> A 2026-06-26 strategy/positioning analysis. This is a **decision + integration map**, not a new
+> pillar. It resolves the identity question and proposes one exact edit to the North Star in
+> [`PRINCIPLES.md`](PRINCIPLES.md) (left for the author to ratify, not silently applied). Research
+> below is primary-source-cited; unsourced reasoning is labeled. The no-fake-results rule extends
+> to strategy: no invented adoption, market size, or revenue.
 
 ## 1. The decision under test
 
@@ -19,7 +19,7 @@ earned **tool-first**, with the VEDC standard as the compounding asset. (Candida
 identity, executed via candidate **C**'s sequencing; see §2.) The broad "MITRE for AI security"
 framing is killed: that throne is taken and undefendable solo.
 
-## 2. Tournament (pre-registered kills, evidence decides)
+## 2. Candidate comparison (pre-registered kills, evidence decides)
 
 Candidates, deciding test = which identity maximizes the five success gates (independent
 reproduction · vendor reaction · third-party reference · integration-not-isolation · neutrality
@@ -27,10 +27,10 @@ preserved) at lowest neutrality/funding risk, for a **solo founder**.
 
 | Cand. | Identity | Verdict | Why (evidence) |
 |---|---|---|---|
-| **A** | Broad "MITRE for AI security" | **KILLED → GRAVEYARD** | MITRE ATLAS already owns the broad adversarial-AI taxonomy (ATT&CK-modeled, agentic+MCP coverage); OWASP/NIST own their layers. Competing on their turf solo fails Reviewer #2 + CEO + Reality. Re-confirms the already-buried "broad AI-security authority." |
+| **A** | Broad "MITRE for AI security" | **KILLED → GRAVEYARD** | MITRE ATLAS already owns the broad adversarial-AI taxonomy (ATT&CK-modeled, agentic+MCP coverage); OWASP/NIST own their layers. Competing on their turf solo is not defensible for a single maintainer. Re-confirms the already-buried "broad AI-security authority." |
 | **B** | Erasure-durability / deletion-verification authority, **integrated** into ATLAS/NIST/ISO/GDPR | **WINNER (identity)** | The physical-residue layer is empty in all 6 frameworks (§3). Neutrality is a seat no vendor can hold (§4). Integration-not-isolation is the whole play (`INTEGRATION.md`). |
 | **C** | DFIR/erasure **tool-first**; standard as a side effect | **WINNER (sequencing)** — merged into B | Not a rival to B: it is *how B is earned*. Authority bodies become cited via a free spec **plus** open-core tooling (§5). `vdbresidue` (tool) + VEDC (standard) is exactly that pairing. |
-| **D** | Academic-first (preprint → citations → authority) | **KILLED as identity → GRAVEYARD** (retained as a *move*) | A paper decays and **commoditizes the method**, eroding the scarcity that is part of the moat (§4). Maintainer + Commercial + CEO kill it as the identity. A preprint is a useful authority-conferring *action*, not the position. |
+| **D** | Academic-first (preprint → citations → authority) | **KILLED as identity → GRAVEYARD** (retained as a *move*) | A paper decays and **commoditizes the method**, eroding the scarcity that is part of the moat (§4). It does not hold up as the identity. A preprint is a useful authority-conferring *action*, not the position. |
 
 **B and C are complements (identity vs sequencing), stated explicitly per the brief.** The merged
 position: *be the erasure-durability authority (B), earn it tool-first with the standard as the
@@ -145,9 +145,9 @@ Every body that became cited-by-default did it the same way — and the failure 
   funds Althaqeb and the VEDC registry content; keep the evidence-gate + NO-FAKE structural (it
   already is). This is the Ethics seat's standing watch item.**
 
-## 6. Proposed CONSTITUTION edit — FOR HUMAN RATIFICATION (do not auto-apply)
+## 6. Proposed North-Star edit — for the author to ratify
 
-Current North Star (`CONSTITUTION.md` §NORTH STAR, line 32): *"Althaqeb exists to become a
+Current North Star ([`PRINCIPLES.md`](PRINCIPLES.md)): *"Althaqeb exists to become a
 **neutral authority in AI Security**. Not a product. Not a paper. Not a collection of scripts.
 Authority."*
 
@@ -161,17 +161,18 @@ Authority."*
 > of scripts. Authority — earned tool-first, with the standard as the compounding asset.
 
 The ladder (Research→…→Standards→Certification→Authority) is unchanged; this narrows the *domain*
-from "AI security" (taken) to "erasure durability in AI memory" (open). **A human ratifies this
-edit; the agent will not rewrite the constitution unilaterally.**
+from "AI security" (taken) to "erasure durability in AI memory" (open). **The author ratifies this
+edit; it is not applied unilaterally.**
 
-## 7. Board verdict
+## 7. Review summary
 
-No seat kills B+C. **Authority** — clear citation path (AISVS C8.3.4, ISO A.8.10, NIST crosswalk).
-**CEO** — 1/3/5-yr moat real but adoption-conditional; favors the narrow identity. **Commercial** —
-CIS open-core fits exactly; neutral core preserved. **Reviewer #2** — niche proven empty across 6
-frameworks + unlearning literature; SPEC §7 pins the delta. **Ethics** — dual-use handled
-defensive-first; Trap 2 is the standing watch item (funders ≠ registry). **Reality (veto)** — every
-claim traces to a primary source or committed result; passes. **A and D killed to GRAVEYARD.**
+The combined B+C position survives every review lens. The citation path is clear (AISVS C8.3.4,
+ISO A.8.10, NIST crosswalk). The 1/3/5-year moat is real but adoption-conditional, which favors the
+narrow identity. The CIS open-core model fits exactly and preserves a neutral core. The niche is
+empirically empty across 6 frameworks plus the unlearning literature, with the prior-art delta
+pinned in SPEC §7. The dual-use risk is handled defensive-first, and keeping whoever funds the work
+separate from the registry (Trap 2) is the standing watch item. Every claim traces to a primary
+source or a committed result. Candidates A and D are killed (→ GRAVEYARD).
 
 ## 8. Open questions (honest; not forced closed)
 

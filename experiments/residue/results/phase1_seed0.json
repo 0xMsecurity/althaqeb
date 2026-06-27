@@ -1,6 +1,6 @@
 {
   "seed": 0,
-  "db": "/home/msec/opt/althaqeb/experiments/residue/db/chroma_gtr_seed0",
+  "db": "<repo>/experiments/residue/db/chroma_gtr_seed0",
   "stages": {
     "models_loaded_s": 12.1,
     "added": 5,
