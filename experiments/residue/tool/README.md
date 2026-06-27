@@ -17,7 +17,7 @@ lets a data controller or DFIR analyst verify whether an erasure actually remove
   with UTC timestamp, target, output file SHA256s, and result counts.
 
 ## Backends
-Two recovery modes, by what the engine's on-disk format makes possible:
+Two recovery modes, depending on what the engine's on-disk format makes possible:
 
 **Blind recovery** (recovers deleted vectors with no prior knowledge — deletion self-identifies):
 | Backend | "which are deleted" | Recovery |

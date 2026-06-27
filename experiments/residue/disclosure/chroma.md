@@ -57,7 +57,7 @@ Full env in `../results/ENV.txt`; pinned deps in `../requirements.lock.txt`; ste
   text from the residue (cosine 0.89–0.97; trigger-token preservation 0.8–1.0).
 
 ## Impact
-A party with read access to the persistence directory (host, backup, snapshot, shared/мulti-
+A party with read access to the persistence directory (host, backup, snapshot, shared/multi-
 tenant volume, or a decommissioned disk) can recover and read content that was "deleted",
 including data deleted to satisfy an erasure / right-to-be-forgotten request. Because
 deletion is self-identifying, recovery is *targeted* at exactly the erased records.

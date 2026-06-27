@@ -10,7 +10,7 @@ readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"
 authors = [
-    { name = "0xMsecurity", email = "msecurity@msecurity.bh" }
+    { name = "0xMsecurity", email = "msecuritybh@gmail.com" }
 ]
 keywords = ["ai-security", "agent-memory", "vector-database", "forensics", "embedding-inversion", "vec2text", "hnsw"]
 classifiers = [

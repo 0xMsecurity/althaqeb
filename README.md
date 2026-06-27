@@ -1,7 +1,7 @@
 # althaqeb — vector-store erasure-durability research, tooling & standard
 
 Does **`delete()` actually erase?** Althaqeb studies whether logically-deleted embedding
-vectors really leave an agent / vector-database memory store — and turns the surviving
+vectors ever leave an agent / vector-database memory store — and turns the surviving
 evidence into durable, reusable assets.
 
 > **Finding (executed, not asserted):** After an official `delete()` that the logical layer

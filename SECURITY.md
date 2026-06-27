@@ -10,7 +10,7 @@
 
 If you discover a security vulnerability in Althaqeb itself, please report it responsibly:
 
-**Email:** msecurity@msecurity.bh  
+**Email:** msecuritybh@gmail.com  
 **GitHub:** Open a private security advisory at https://github.com/0xMsecurity/althaqeb/security/advisories/new
 
 Please **do not** open a public issue for security vulnerabilities.
